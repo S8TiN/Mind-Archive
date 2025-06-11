@@ -1,6 +1,7 @@
 from django.urls import path
-from . import views
+from .views import home, MemoryEntryListCreate
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', home, name='home'),
+    path('api/memories/', MemoryEntryListCreate.as_view(), name='memory-list-create'),
 ]
