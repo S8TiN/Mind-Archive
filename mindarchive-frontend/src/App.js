@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 function App() {
   const [memories, setMemories] = useState([]);
+  const [selectedMemory, setSelectedMemory] = useState(null);
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/memories/')
@@ -28,6 +29,7 @@ function App() {
           <div
             key={memory.id}
             title={memory.title}
+            onClick={() => setSelectedMemory(memory)}
             style={{
               position: 'absolute',
               left: `${memory.x}%`,
@@ -43,6 +45,26 @@ function App() {
           />
         );
       })}
+      {selectedMemory && (
+  <div
+    style={{
+      position: 'absolute',
+      top: '20px',
+      left: '20px',
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      padding: '16px',
+      borderRadius: '8px',
+      boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+      maxWidth: '300px',
+      zIndex: 10,
+    }}
+  >
+    <h3>{selectedMemory.title}</h3>
+    <p><strong>Content:</strong> {selectedMemory.content}</p>
+    <button onClick={() => setSelectedMemory(null)}>Close</button>
+  </div>
+)}
+
     </div>
   );
 }
