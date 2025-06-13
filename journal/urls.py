@@ -1,7 +1,11 @@
-from django.urls import path
-from .views import home, MemoryEntryListCreate
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import home, MemoryEntryViewSet
+
+router = DefaultRouter()
+router.register(r'api/memories', MemoryEntryViewSet, basename='memory')
 
 urlpatterns = [
     path('', home, name='home'),
-    path('api/memories/', MemoryEntryListCreate.as_view(), name='memory-list-create'),
+    path('', include(router.urls)),
 ]
