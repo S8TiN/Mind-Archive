@@ -1,10 +1,10 @@
-from django.http import HttpResponse
+from django.http import JsonResponse
 from rest_framework import viewsets
 from .models import MemoryEntry
 from .serializers import MemoryEntrySerializer
 
 def home(request):
-    return HttpResponse("Welcome to Mind Archive 🌌")
+    return JsonResponse({"message": "Welcome to the Mind Archive API 🌌"})
 
 class MemoryEntryViewSet(viewsets.ModelViewSet):
     queryset = MemoryEntry.objects.all()
