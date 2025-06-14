@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 
 function NewMemoryForm({ onAdd }) {
-  const [title, setTitle] = useState('');
+  const [date, setDate] = useState('');
   const [content, setContent] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newMemory = {
-      title,
+      date,
       content,
       x: (Math.random() * 80 + 10).toFixed(2),
       y: (Math.random() * 80 + 10).toFixed(2),
@@ -22,7 +22,7 @@ function NewMemoryForm({ onAdd }) {
 
     if (response.ok) {
       onAdd();
-      setTitle('');
+      setDate('');
       setContent('');
     } else {
       alert('Failed to save memory');
@@ -32,10 +32,10 @@ function NewMemoryForm({ onAdd }) {
   return (
     <form onSubmit={handleSubmit} style={{ marginBottom: '1rem' }}>
       <input
-        type="text"
-        placeholder="Date (or Title)"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        type="date"
+        placeholder="Date (YYYY-MM-DD)"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
         required
       />
       <br />
