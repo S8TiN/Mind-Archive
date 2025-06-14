@@ -180,7 +180,8 @@ function App() {
           style={{
             position: 'fixed',
             top: '20px',
-            left: '20px',
+            right: '20px',
+            left: 'auto',
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
             padding: '16px',
             borderRadius: '8px',
@@ -189,7 +190,7 @@ function App() {
             zIndex: 10,
           }}
         >
-          <h3>{selectedMemory.date}</h3>
+          <h3>{selectedMemory.date || selectedMemory.title}</h3>
           <p><strong>Content:</strong> {selectedMemory.content}</p>
           <button onClick={() => setSelectedMemory(null)}>Close</button>
         </div>
