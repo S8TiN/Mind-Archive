@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import NewMemoryForm from './NewMemoryForm';
 
 function App() {
   const [memories, setMemories] = useState([]);
@@ -68,7 +69,7 @@ function App() {
   };
 
   const groupedMemories = memories.reduce((acc, memory) => {
-    const key = getMonthYear(memory.title); // replace with memory.date if field is renamed
+    const key = getMonthYear(memory.title); // use memory.title
     if (!acc[key]) acc[key] = [];
     acc[key].push(memory);
     return acc;
@@ -78,10 +79,15 @@ function App() {
   const sectionHeight = 600;
 
   return (
-    <div style={{ background: '#000', overflowY: 'scroll', height: '100vh' }}>
+    <div style={{ background: '#000', overflowY: 'scroll', height: '100vh', padding: '16px' }}>
+      <h1 style={{ color: '#8fdcff', marginBottom: '8px' }}>Mind Archive 🌌</h1>
+
+      {/*New Memory Form */}
+      <NewMemoryForm onAdd={(newMemory) => setMemories((prev) => [...prev, newMemory])} />
+
       {monthKeys.map((monthKey, index) => {
         const monthMemories = [...groupedMemories[monthKey]]
-          .sort((a, b) => new Date(a.title) - new Date(b.title)); // sort chronologically
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
 
         return (
           <div
@@ -107,7 +113,7 @@ function App() {
                 borderRadius: '4px',
                 zIndex: 5,
                 pointerEvents: 'auto',
-                userSelect: 'none', // prevent highlight
+                userSelect: 'none',
               }}
               onMouseDown={(e) => e.stopPropagation()}
             >
@@ -142,7 +148,7 @@ function App() {
               return (
                 <div
                   key={memory.id}
-                  title={memory.title}
+                  date={memory.date}
                   onClick={() => setSelectedMemory(memory)}
                   onMouseDown={() => {
                     setDraggingId(memory.id);
@@ -183,7 +189,7 @@ function App() {
             zIndex: 10,
           }}
         >
-          <h3>{selectedMemory.title}</h3>
+          <h3>{selectedMemory.date}</h3>
           <p><strong>Content:</strong> {selectedMemory.content}</p>
           <button onClick={() => setSelectedMemory(null)}>Close</button>
         </div>
