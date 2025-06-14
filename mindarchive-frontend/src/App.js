@@ -77,17 +77,35 @@ function App() {
 
   const monthKeys = Object.keys(groupedMemories);
   const sectionHeight = 600;
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm('Are you sure you want to delete this memory?');
+    if (!confirmed) return;
+
+    const response = await fetch(`http://127.0.0.1:8000/api/memories/${id}/`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      setMemories((prev) => prev.filter((m) => m.id !== id));
+      setSelectedMemory(null);
+    } else {
+      alert('Failed to delete memory.');
+    }
+  };
 
   return (
     <div style={{ background: '#000', overflowY: 'scroll', height: '100vh', padding: '16px' }}>
       <h1 style={{ color: '#8fdcff', marginBottom: '8px' }}>Mind Archive 🌌</h1>
 
-      {/*New Memory Form */}
-      <NewMemoryForm onAdd={(newMemory) => setMemories((prev) => [...prev, newMemory])} />
+      <NewMemoryForm onAdd={() => {
+        fetch('http://127.0.0.1:8000/api/memories/')
+          .then((res) => res.json())
+          .then((data) => setMemories(data));
+      }} />
 
       {monthKeys.map((monthKey, index) => {
         const monthMemories = [...groupedMemories[monthKey]]
-          .sort((a, b) => new Date(a.date) - new Date(b.date));
+          .sort((a, b) => new Date(a.date || a.title) - new Date(b.date || b.title));
 
         return (
           <div
@@ -193,6 +211,12 @@ function App() {
           <h3>{selectedMemory.date || selectedMemory.title}</h3>
           <p><strong>Content:</strong> {selectedMemory.content}</p>
           <button onClick={() => setSelectedMemory(null)}>Close</button>
+          <button
+            onClick={() => handleDelete(selectedMemory.id)}
+            style={{ marginTop: '8px', backgroundColor: '#ff4d4d', color: '#fff' }}
+          >
+            Delete
+          </button>
         </div>
       )}
     </div>

@@ -21,8 +21,7 @@ function NewMemoryForm({ onAdd }) {
     });
 
     if (response.ok) {
-      const data = await response.json();
-      onAdd(data);
+      onAdd();
       setTitle('');
       setContent('');
     } else {
