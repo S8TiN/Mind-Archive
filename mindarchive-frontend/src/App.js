@@ -57,19 +57,18 @@ function App() {
     };
   }, [draggingId, memories]);
 
-  const getMonthYear = (dateStr) => {
-    if (!dateStr || typeof dateStr !== 'string') return 'unknown';
-    const [month, , year] = dateStr.split('/');
+  const getMonthYear = (title) => {
+    const date = new Date(title);
+    if (isNaN(date)) return 'unknown';
     const monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
-    const monthIndex = parseInt(month, 10) - 1;
-    return `${monthNames[monthIndex]} ${year}`;
+    return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
   };
 
   const groupedMemories = memories.reduce((acc, memory) => {
-    const key = getMonthYear(memory.title); // use memory.title
+    const key = getMonthYear(memory.title);
     if (!acc[key]) acc[key] = [];
     acc[key].push(memory);
     return acc;
@@ -77,6 +76,7 @@ function App() {
 
   const monthKeys = Object.keys(groupedMemories);
   const sectionHeight = 600;
+
   const handleDelete = async (id) => {
     const confirmed = window.confirm('Are you sure you want to delete this memory?');
     if (!confirmed) return;
@@ -105,7 +105,7 @@ function App() {
 
       {monthKeys.map((monthKey, index) => {
         const monthMemories = [...groupedMemories[monthKey]]
-          .sort((a, b) => new Date(a.date || a.title) - new Date(b.date || b.title));
+          .sort((a, b) => new Date(a.title) - new Date(b.title));
 
         return (
           <div
@@ -166,7 +166,6 @@ function App() {
               return (
                 <div
                   key={memory.id}
-                  date={memory.date}
                   onClick={() => setSelectedMemory(memory)}
                   onMouseDown={() => {
                     setDraggingId(memory.id);
@@ -208,7 +207,7 @@ function App() {
             zIndex: 10,
           }}
         >
-          <h3>{selectedMemory.date || selectedMemory.title}</h3>
+          <h3>{selectedMemory.title}</h3>
           <p><strong>Content:</strong> {selectedMemory.content}</p>
           <button onClick={() => setSelectedMemory(null)}>Close</button>
           <button
