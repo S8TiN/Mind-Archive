@@ -24,7 +24,7 @@ function App() {
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       let y = ((e.clientY - rect.top) / rect.height) * 100;
 
-      y = Math.max(10, y); // prevent dragging into label area
+      y = Math.max(10, y);
 
       setMemories((prev) =>
         prev.map((m) =>
@@ -74,7 +74,11 @@ function App() {
     return acc;
   }, {});
 
-  const monthKeys = Object.keys(groupedMemories);
+  const monthKeys = Object.keys(groupedMemories).sort((a, b) => {
+    const getDateFromKey = (key) => new Date(`${key} 01`);
+    return getDateFromKey(a) - getDateFromKey(b);
+  });
+
   const sectionHeight = 600;
 
   const handleDelete = async (id) => {
@@ -117,7 +121,6 @@ function App() {
               borderBottom: '1px solid #444',
             }}
           >
-            {/* Month Label */}
             <div
               style={{
                 position: 'absolute',
@@ -138,7 +141,6 @@ function App() {
               {monthKey}
             </div>
 
-            {/* Constellation Lines */}
             <svg style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 0 }}>
               {monthMemories.map((curr, i) => {
                 const prev = monthMemories[i - 1];
@@ -157,7 +159,6 @@ function App() {
               })}
             </svg>
 
-            {/* Stars */}
             {monthMemories.map((memory) => {
               const x = parseFloat(memory.x);
               const y = parseFloat(memory.y) * 0.9;
@@ -191,7 +192,6 @@ function App() {
         );
       })}
 
-      {/* Popup Info Card */}
       {selectedMemory && (
         <div
           style={{

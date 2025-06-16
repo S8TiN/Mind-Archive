@@ -1,9 +1,8 @@
-// src/Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
@@ -13,7 +12,7 @@ function Login() {
     const response = await fetch('http://127.0.0.1:8000/api/login/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: email, password }),
+      body: JSON.stringify({ username, password }),
     });
 
     const data = await response.json();
@@ -34,8 +33,8 @@ function Login() {
         <input
           type="text"
           placeholder="Username"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         /><br /><br />
         <input
