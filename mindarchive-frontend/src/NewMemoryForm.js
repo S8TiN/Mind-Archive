@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 function NewMemoryForm({ onAdd }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [color, setColor] = useState('#ffffff'); // 🎨 New state for color
 
   // 🔒 Get CSRF token from cookie
   const getCSRFTokenFromCookie = () => {
@@ -23,6 +24,7 @@ function NewMemoryForm({ onAdd }) {
     const newMemory = {
       title,
       content,
+      color, // 🎨 Include color in memory object
       x: (Math.random() * 80 + 10).toFixed(2),
       y: (Math.random() * 80 + 10).toFixed(2),
     };
@@ -43,6 +45,7 @@ function NewMemoryForm({ onAdd }) {
       onAdd();
       setTitle('');
       setContent('');
+      setColor('#ffffff'); // Reset color too
     } else {
       alert('Failed to save memory.');
     }
@@ -70,6 +73,16 @@ function NewMemoryForm({ onAdd }) {
           required
           rows={4}
           style={{ width: '300px', padding: '6px' }}
+        />
+      </label>
+      <br /><br />
+      <label>
+        Color:
+        <input
+          type="color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+          style={{ marginLeft: '10px' }}
         />
       </label>
       <br />

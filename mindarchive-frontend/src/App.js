@@ -11,7 +11,6 @@ function App() {
   const containerRefs = useRef({});
   const sectionIndexRef = useRef(null);
 
-  // ✅ Separate function to fetch user info (used after login)
   const fetchUser = async () => {
     try {
       const res = await fetch("http://localhost:8000/api/user/", {
@@ -22,24 +21,21 @@ function App() {
         console.log("Fetched user:", data);
         setUser(data);
       } else {
-        console.log("User not logged in");
         setUser(null);
       }
-    } catch (err) {
-      console.error("Error checking login:", err);
+    } catch {
       setUser(null);
     }
   };
 
-  // ✅ Run once on load
   useEffect(() => {
     fetchUser();
   }, []);
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/memories/')
-      .then((res) => res.json())
-      .then((data) => setMemories(data));
+      .then(res => res.json())
+      .then(data => setMemories(data));
   }, []);
 
   useEffect(() => {
@@ -47,7 +43,6 @@ function App() {
       if (!draggingId || sectionIndexRef.current === null) return;
       const container = containerRefs.current[sectionIndexRef.current];
       if (!container) return;
-
       const rect = container.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       let y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -62,7 +57,6 @@ function App() {
 
     const handleMouseUp = () => {
       if (!draggingId) return;
-
       const memory = memories.find((m) => m.id === draggingId);
       if (memory) {
         fetch(`http://127.0.0.1:8000/api/memories/${memory.id}/`, {
@@ -71,7 +65,6 @@ function App() {
           body: JSON.stringify({ x: memory.x, y: memory.y }),
         });
       }
-
       setDraggingId(null);
       sectionIndexRef.current = null;
     };
@@ -109,24 +102,18 @@ function App() {
   const sectionHeight = 600;
 
   const handleDelete = async (id) => {
-    const confirmed = window.confirm('Are you sure you want to delete this memory?');
-    if (!confirmed) return;
-
+    if (!window.confirm('Delete this memory?')) return;
     const response = await fetch(`http://127.0.0.1:8000/api/memories/${id}/`, {
       method: 'DELETE',
     });
-
     if (response.ok) {
-      setMemories((prev) => prev.filter((m) => m.id !== id));
+      setMemories(prev => prev.filter(m => m.id !== id));
       setSelectedMemory(null);
-    } else {
-      alert('Failed to delete memory.');
     }
   };
 
-  // ✅ If not logged in, show login screen and pass login success callback
   if (!user) {
-    return <Login onLoginSuccess={fetchUser} />;
+    return <Login onLoginSuccess={fetchUser} />; // ✅ Fix was here
   }
 
   return (
@@ -136,40 +123,25 @@ function App() {
 
       <NewMemoryForm onAdd={() => {
         fetch('http://127.0.0.1:8000/api/memories/')
-          .then((res) => res.json())
-          .then((data) => setMemories(data));
+          .then(res => res.json())
+          .then(data => setMemories(data));
       }} />
 
       {monthKeys.map((monthKey, index) => {
-        const monthMemories = [...groupedMemories[monthKey]]
-          .sort((a, b) => new Date(a.title) - new Date(b.title));
+        const monthMemories = [...groupedMemories[monthKey]].sort((a, b) => new Date(a.title) - new Date(b.title));
 
         return (
           <div
             key={monthKey}
             ref={(el) => (containerRefs.current[index] = el)}
-            style={{
-              position: 'relative',
-              height: `${sectionHeight}px`,
-              borderBottom: '1px solid #444',
-            }}
+            style={{ position: 'relative', height: `${sectionHeight}px`, borderBottom: '1px solid #444' }}
           >
             <div
               style={{
-                position: 'absolute',
-                top: '10px',
-                left: '20px',
-                backgroundColor: '#000',
-                color: '#8fdcff',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                padding: '4px 8px',
-                borderRadius: '4px',
-                zIndex: 5,
-                pointerEvents: 'auto',
-                userSelect: 'none',
+                position: 'absolute', top: '10px', left: '20px', backgroundColor: '#000',
+                color: '#8fdcff', fontSize: '18px', fontWeight: 'bold', padding: '4px 8px',
+                borderRadius: '4px', zIndex: 5
               }}
-              onMouseDown={(e) => e.stopPropagation()}
             >
               {monthKey}
             </div>
@@ -181,10 +153,8 @@ function App() {
                 return (
                   <line
                     key={`${prev.id}-to-${curr.id}`}
-                    x1={`${prev.x}%`}
-                    y1={`${prev.y * 0.9}%`}
-                    x2={`${curr.x}%`}
-                    y2={`${curr.y * 0.9}%`}
+                    x1={`${prev.x}%`} y1={`${prev.y * 0.9}%`}
+                    x2={`${curr.x}%`} y2={`${curr.y * 0.9}%`}
                     stroke="#8fdcff"
                     strokeWidth="1"
                   />
@@ -206,17 +176,9 @@ function App() {
                     sectionIndexRef.current = index;
                   }}
                   style={{
-                    position: 'absolute',
-                    left: `${x}%`,
-                    top: `${y}%`,
-                    width: '10px',
-                    height: '10px',
-                    borderRadius: '50%',
-                    backgroundColor: '#fff',
-                    boxShadow: '0 0 8px 2px #8fdcff',
-                    cursor: 'grab',
-                    transform: 'translate(-50%, -50%)',
-                    zIndex: 1,
+                    position: 'absolute', left: `${x}%`, top: `${y}%`, width: '10px', height: '10px',
+                    borderRadius: '50%', backgroundColor: memory.color || '#ffffff', boxShadow: `0 0 8px 2px ${memory.color || '#8fdcff'}`,
+                    cursor: 'grab', transform: 'translate(-50%, -50%)', zIndex: 1
                   }}
                 />
               );
@@ -228,16 +190,8 @@ function App() {
       {selectedMemory && (
         <div
           style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            left: 'auto',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            padding: '16px',
-            borderRadius: '8px',
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
-            maxWidth: '300px',
-            zIndex: 10,
+            position: 'fixed', top: '20px', right: '20px', backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            padding: '16px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0,0,0,0.2)', maxWidth: '300px', zIndex: 10
           }}
         >
           <h3>{selectedMemory.title}</h3>
