@@ -1,12 +1,40 @@
 import React, { useEffect, useState, useRef } from 'react';
 import NewMemoryForm from './NewMemoryForm';
+import Login from './Login';
 
 function App() {
   const [memories, setMemories] = useState([]);
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [draggingId, setDraggingId] = useState(null);
+  const [user, setUser] = useState(null);
+
   const containerRefs = useRef({});
   const sectionIndexRef = useRef(null);
+
+  // ✅ Separate function to fetch user info (used after login)
+  const fetchUser = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/api/user/", {
+        credentials: "include",
+      });
+      if (res.status === 200) {
+        const data = await res.json();
+        console.log("Fetched user:", data);
+        setUser(data);
+      } else {
+        console.log("User not logged in");
+        setUser(null);
+      }
+    } catch (err) {
+      console.error("Error checking login:", err);
+      setUser(null);
+    }
+  };
+
+  // ✅ Run once on load
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/memories/')
@@ -23,7 +51,6 @@ function App() {
       const rect = container.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       let y = ((e.clientY - rect.top) / rect.height) * 100;
-
       y = Math.max(10, y);
 
       setMemories((prev) =>
@@ -97,9 +124,15 @@ function App() {
     }
   };
 
+  // ✅ If not logged in, show login screen and pass login success callback
+  if (!user) {
+    return <Login onLoginSuccess={fetchUser} />;
+  }
+
   return (
     <div style={{ background: '#000', overflowY: 'scroll', height: '100vh', padding: '16px' }}>
       <h1 style={{ color: '#8fdcff', marginBottom: '8px' }}>Mind Archive 🌌</h1>
+      <p style={{ color: '#8fdcff' }}>Welcome, {user.username}!</p>
 
       <NewMemoryForm onAdd={() => {
         fetch('http://127.0.0.1:8000/api/memories/')

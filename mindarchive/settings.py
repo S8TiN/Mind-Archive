@@ -28,13 +28,13 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
-    'corsheaders',  # ✅ Added
+    'corsheaders',
 
     'journal',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # ✅ Added (must be high up)
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -89,6 +89,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['profile', 'email'],
@@ -100,3 +102,24 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+LOGIN_REDIRECT_URL = "http://localhost:3000"
+
+# ✅ Prevent redirecting to /accounts/login/ (which doesn't exist)
+LOGIN_URL = "/does-not-exist/"
+
+# ✅ DRF config to prevent silent redirect fallback
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'UNAUTHENTICATED_USER': None,
+}
+
+# Optional allauth settings to use email-only auth (if desired)
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
