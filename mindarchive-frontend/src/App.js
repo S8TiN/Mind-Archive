@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import NewMemoryForm from './NewMemoryForm';
 import Login from './Login';
+import './App.css';
 
 function App() {
   const [memories, setMemories] = useState([]);
@@ -127,6 +128,7 @@ function App() {
           .then(data => setMemories(data));
       }} />
 
+      {/* Monthly star groupings */}
       {monthKeys.map((monthKey, index) => {
         const monthMemories = [...groupedMemories[monthKey]].sort((a, b) => new Date(a.title) - new Date(b.title));
 
@@ -227,72 +229,67 @@ function App() {
             boxShadow: '0 0 10px rgba(0,0,0,0.2)',
             zIndex: 10,
             maxWidth: '300px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
           }}
         >
           <h3>Edit Memory</h3>
-          <label>
+          <label style={{ color: '#000' }}>
             Date:
             <input
               type="date"
               name="title"
               defaultValue={selectedMemory.title}
               required
-              style={{ marginBottom: '8px', display: 'block' }}
+              style={{ padding: '6px', width: '100%', marginTop: '4px' }}
             />
           </label>
-          <label>
+          <label style={{ color: '#000' }}>
             Memory:
             <textarea
               name="content"
               defaultValue={selectedMemory.content}
               required
               rows={4}
-              style={{ width: '100%', marginBottom: '8px' }}
+              style={{ padding: '6px', width: '100%', marginTop: '4px' }}
             />
           </label>
-          <label>
+          <label style={{ color: '#000' }}>
             Color:
             <input
               type="color"
               name="color"
               defaultValue={selectedMemory.color || '#ffffff'}
-              style={{ marginBottom: '8px', display: 'block' }}
+              style={{ marginTop: '4px', width: '100%' }}
             />
           </label>
-          <button type="submit" style={{ marginRight: '8px' }}>Save</button>
-          <button type="button" onClick={() => setEditing(false)}>Cancel</button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <button
+              type="submit"
+              style={{ backgroundColor: '#4da6ff', color: 'white', padding: '6px 12px', borderRadius: '4px' }}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditing(false)}
+              style={{ backgroundColor: '#ccc', color: '#333', padding: '6px 12px', borderRadius: '4px' }}
+            >
+              Cancel
+            </button>
+          </div>
         </form>
+
       )}
 
       {selectedMemory && !editing && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            padding: '16px',
-            borderRadius: '8px',
-            boxShadow: '0 0 10px rgba(0,0,0,0.2)',
-            maxWidth: '300px',
-            zIndex: 10
-          }}
-        >
+        <div className="popup-card" style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 10 }}>
           <h3>{selectedMemory.title}</h3>
           <p><strong>Content:</strong> {selectedMemory.content}</p>
           <button onClick={() => setSelectedMemory(null)}>Close</button>
-          <button
-            onClick={() => setEditing(true)}
-            style={{ marginTop: '8px', backgroundColor: '#4da6ff', color: '#fff' }}
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => handleDelete(selectedMemory.id)}
-            style={{ marginTop: '8px', backgroundColor: '#ff4d4d', color: '#fff' }}
-          >
-            Delete
-          </button>
+          <button onClick={() => setEditing(true)}>Edit</button>
+          <button onClick={() => handleDelete(selectedMemory.id)} className="danger">Delete</button>
         </div>
       )}
     </div>
