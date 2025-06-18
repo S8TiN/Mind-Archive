@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 function NewMemoryForm({ onAdd }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [color, setColor] = useState('#ffffff'); // 🎨 New state for color
+  const [color, setColor] = useState('#ffffff'); 
 
   // 🔒 Get CSRF token from cookie
   const getCSRFTokenFromCookie = () => {
@@ -24,7 +24,7 @@ function NewMemoryForm({ onAdd }) {
     const newMemory = {
       title,
       content,
-      color, // 🎨 Include color in memory object
+      color, 
       x: (Math.random() * 80 + 10).toFixed(2),
       y: (Math.random() * 80 + 10).toFixed(2),
     };
@@ -52,41 +52,56 @@ function NewMemoryForm({ onAdd }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: '1rem', color: '#8fdcff' }}>
-      <label>
-        Date:
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        marginBottom: '1rem',
+        color: '#8fdcff',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+        maxWidth: '320px',
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <label htmlFor="date">Date:</label>
         <input
+          id="date"
           type="date"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-          style={{ marginLeft: '10px', padding: '4px' }}
+          style={{ padding: '6px' }}
         />
-      </label>
-      <br /><br />
-      <label>
-        Memory:
-        <br />
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <label htmlFor="content">Memory:</label>
         <textarea
+          id="content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           required
           rows={4}
-          style={{ width: '300px', padding: '6px' }}
+          style={{ padding: '6px' }}
         />
-      </label>
-      <br /><br />
-      <label>
-        Color:
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <label htmlFor="color">Color:</label>
         <input
+          id="color"
           type="color"
           value={color}
           onChange={(e) => setColor(e.target.value)}
-          style={{ marginLeft: '10px' }}
+          style={{ width: '100%' }}
         />
-      </label>
-      <br />
-      <button type="submit" style={{ marginTop: '8px', padding: '6px 12px' }}>
+      </div>
+
+      <button
+        type="submit"
+        style={{ padding: '8px', backgroundColor: '#4da6ff', color: 'white', border: 'none', borderRadius: '6px' }}
+      >
         Add Memory
       </button>
     </form>
