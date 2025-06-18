@@ -224,23 +224,67 @@ function App() {
             right: '20px',
             backgroundColor: 'white',
             padding: '16px',
-            borderRadius: '12px',
-            boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
+            borderRadius: '8px',
+            boxShadow: '0 0 10px rgba(0,0,0,0.2)',
             zIndex: 10,
             maxWidth: '300px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px',
+            gap: '12px',
           }}
         >
           <h3>Edit Memory</h3>
-          <label>Date:<input type="date" name="title" defaultValue={selectedMemory.title} required /></label>
-          <label>Memory:<textarea name="content" defaultValue={selectedMemory.content} required rows={4} /></label>
-          <label>Color:<input type="color" name="color" defaultValue={selectedMemory.color || '#ffffff'} /></label>
-          <button type="submit" style={{ backgroundColor: '#4da6ff', color: 'white', borderRadius: '6px', padding: '8px', border: 'none' }}>Save</button>
-          <button type="button" onClick={() => setEditing(false)} style={{ backgroundColor: '#ccc', color: '#333', borderRadius: '6px', padding: '8px', border: 'none' }}>Cancel</button>
+
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <label style={{ marginBottom: '4px', color: '#000' }}>Date:</label>
+            <input
+              type="date"
+              name="title"
+              defaultValue={selectedMemory.title}
+              required
+              style={{ padding: '6px', width: '100%' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <label style={{ marginBottom: '4px', color: '#000' }}>Memory:</label>
+            <textarea
+              name="content"
+              defaultValue={selectedMemory.content}
+              required
+              rows={4}
+              style={{ padding: '6px', width: '100%' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <label style={{ marginBottom: '4px', color: '#000' }}>Color:</label>
+            <input
+              type="color"
+              name="color"
+              defaultValue={selectedMemory.color || '#ffffff'}
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+            <button
+              type="submit"
+              style={{ backgroundColor: '#4da6ff', color: 'white', padding: '6px 12px', borderRadius: '4px' }}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditing(false)}
+              style={{ backgroundColor: '#ccc', color: '#333', padding: '6px 12px', borderRadius: '4px' }}
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       )}
+
 
       {selectedMemory && !editing && (
         <div
