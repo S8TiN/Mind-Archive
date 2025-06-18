@@ -5,6 +5,7 @@ import Login from './Login';
 function App() {
   const [memories, setMemories] = useState([]);
   const [selectedMemory, setSelectedMemory] = useState(null);
+  const [editing, setEditing] = useState(false);
   const [draggingId, setDraggingId] = useState(null);
   const [user, setUser] = useState(null);
 
@@ -18,7 +19,6 @@ function App() {
       });
       if (res.status === 200) {
         const data = await res.json();
-        console.log("Fetched user:", data);
         setUser(data);
       } else {
         setUser(null);
@@ -113,7 +113,7 @@ function App() {
   };
 
   if (!user) {
-    return <Login onLoginSuccess={fetchUser} />; // ✅ Fix was here
+    return <Login onLoginSuccess={fetchUser} />;
   }
 
   return (
@@ -170,7 +170,10 @@ function App() {
               return (
                 <div
                   key={memory.id}
-                  onClick={() => setSelectedMemory(memory)}
+                  onClick={() => {
+                    setSelectedMemory(memory);
+                    setEditing(false);
+                  }}
                   onMouseDown={() => {
                     setDraggingId(memory.id);
                     sectionIndexRef.current = index;
@@ -187,16 +190,103 @@ function App() {
         );
       })}
 
-      {selectedMemory && (
+      {editing && selectedMemory && (
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const updatedMemory = {
+              title: e.target.title.value,
+              content: e.target.content.value,
+              color: e.target.color.value,
+            };
+
+            const res = await fetch(`http://127.0.0.1:8000/api/memories/${selectedMemory.id}/`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(updatedMemory),
+            });
+
+            if (res.ok) {
+              const updated = await res.json();
+              setMemories((prev) =>
+                prev.map((m) => (m.id === updated.id ? updated : m))
+              );
+              setEditing(false);
+              setSelectedMemory(null);
+            } else {
+              alert('Failed to update memory');
+            }
+          }}
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            backgroundColor: 'white',
+            padding: '16px',
+            borderRadius: '8px',
+            boxShadow: '0 0 10px rgba(0,0,0,0.2)',
+            zIndex: 10,
+            maxWidth: '300px',
+          }}
+        >
+          <h3>Edit Memory</h3>
+          <label>
+            Date:
+            <input
+              type="date"
+              name="title"
+              defaultValue={selectedMemory.title}
+              required
+              style={{ marginBottom: '8px', display: 'block' }}
+            />
+          </label>
+          <label>
+            Memory:
+            <textarea
+              name="content"
+              defaultValue={selectedMemory.content}
+              required
+              rows={4}
+              style={{ width: '100%', marginBottom: '8px' }}
+            />
+          </label>
+          <label>
+            Color:
+            <input
+              type="color"
+              name="color"
+              defaultValue={selectedMemory.color || '#ffffff'}
+              style={{ marginBottom: '8px', display: 'block' }}
+            />
+          </label>
+          <button type="submit" style={{ marginRight: '8px' }}>Save</button>
+          <button type="button" onClick={() => setEditing(false)}>Cancel</button>
+        </form>
+      )}
+
+      {selectedMemory && !editing && (
         <div
           style={{
-            position: 'fixed', top: '20px', right: '20px', backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            padding: '16px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0,0,0,0.2)', maxWidth: '300px', zIndex: 10
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            padding: '16px',
+            borderRadius: '8px',
+            boxShadow: '0 0 10px rgba(0,0,0,0.2)',
+            maxWidth: '300px',
+            zIndex: 10
           }}
         >
           <h3>{selectedMemory.title}</h3>
           <p><strong>Content:</strong> {selectedMemory.content}</p>
           <button onClick={() => setSelectedMemory(null)}>Close</button>
+          <button
+            onClick={() => setEditing(true)}
+            style={{ marginTop: '8px', backgroundColor: '#4da6ff', color: '#fff' }}
+          >
+            Edit
+          </button>
           <button
             onClick={() => handleDelete(selectedMemory.id)}
             style={{ marginTop: '8px', backgroundColor: '#ff4d4d', color: '#fff' }}
