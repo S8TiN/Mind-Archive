@@ -1,12 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  // Fetch CSRF token from backend
+  useEffect(() => {
+    fetchCSRFToken();
+
+    // Google Sign-In setup
+    if (window.google) {
+      window.google.accounts.id.initialize({
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+      });
+
+      window.google.accounts.id.renderButton(
+        document.getElementById('g-signin'),
+        {
+          theme: 'outline',
+          size: 'large',
+          text: 'signin_with',
+          shape: 'rectangular',
+          logo_alignment: 'center',
+        }
+      );
+    }
+  }, []);
+
   const fetchCSRFToken = async () => {
     try {
       const res = await fetch('http://localhost:8000/csrf/', {
@@ -18,14 +40,35 @@ function Login() {
     }
   };
 
-  useEffect(() => {
-    fetchCSRFToken();
-  }, []);
+  const handleCredentialResponse = async (response) => {
+    try {
+      const res = await fetch('http://localhost:8000/api/google-login/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ credential: response.credential }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        console.log('Google login success:', data);
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        } else {
+          navigate('/dashboard');
+        }
+      } else {
+        alert('Google login failed: ' + (data.error || ''));
+      }
+    } catch (err) {
+      console.error('Google login error:', err);
+      alert('Something went wrong with Google login.');
+    }
+  };
 
   const getCSRFTokenFromCookie = () => {
     const name = 'csrftoken=';
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const cookies = decodedCookie.split(';');
+    const cookies = decodeURIComponent(document.cookie).split(';');
     for (let cookie of cookies) {
       cookie = cookie.trim();
       if (cookie.startsWith(name)) {
@@ -51,11 +94,9 @@ function Login() {
       });
 
       const data = await response.json();
-      console.log("Login response:", data);
-
       if (response.ok && data.key) {
         localStorage.setItem('authToken', data.key);
-        navigate('/dashboard'); // ✅ Redirect on success
+        navigate('/dashboard');
       } else {
         alert('Login failed: ' + (data?.non_field_errors || data?.detail || 'Unknown error'));
       }
@@ -75,29 +116,14 @@ function Login() {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: '20px',
       }}
     >
       <h1>Welcome to Mind Archive 🌌</h1>
+      <p>Please sign in to continue</p>
 
-      {/* Google Login */}
-      <a href="http://localhost:8000/accounts/google/login/">
-        <button
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            backgroundColor: '#8fdcff',
-            color: '#000',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            marginBottom: '20px',
-          }}
-        >
-          Login with Google
-        </button>
-      </a>
+      <div id="g-signin" style={{ marginBottom: '20px' }}></div>
 
-      {/* Username/Password Login */}
       <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <input
           type="text"

@@ -1,5 +1,25 @@
-venv/
+# Python
 __pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# Django DB
 db.sqlite3
-*.pyc
+
+# Environment variables
 .env
+.env.*
+
+# Node / React (if frontend lives here too)
+node_modules/
+build/
+dist/
+
+# macOS system files
+.DS_Store
+
+# VS Code settings
+.vscode/
