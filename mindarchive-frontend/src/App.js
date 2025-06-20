@@ -269,15 +269,20 @@ function App() {
             gap: '12px',
           }}
         >
-          <h3 style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Edit Memory</h3>
-          <label style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Date:</label>
+          <h3 style={{ color: '#000' }}>Edit Memory</h3>
+          <label style={{ color: '#000' }}>Date:</label>
           <input name="title" type="date" defaultValue={selectedMemory.title} required />
 
-          <label style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Memory:</label>
+          <label style={{ color: '#000' }}>Memory:</label>
           <textarea name="content" defaultValue={selectedMemory.content} required rows={4} />
 
-          <label style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Color:</label>
-          <input name="color" type="color" defaultValue={selectedMemory.color || '#ffffff'} />
+          <label style={{ color: '#000' }}>Color:</label>
+          <input
+              name="color"
+              type="color"
+              defaultValue={selectedMemory.color || '#ffffff'}
+              style={{ width: '100%', height: '30px', padding: '4px' }}
+          />
 
           <button type="submit">Save</button>
           
