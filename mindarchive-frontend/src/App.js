@@ -269,11 +269,18 @@ function App() {
             gap: '12px',
           }}
         >
-          <h3>Edit Memory</h3>
+          <h3 style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Edit Memory</h3>
+          <label style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Date:</label>
           <input name="title" type="date" defaultValue={selectedMemory.title} required />
+
+          <label style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Memory:</label>
           <textarea name="content" defaultValue={selectedMemory.content} required rows={4} />
+
+          <label style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Color:</label>
           <input name="color" type="color" defaultValue={selectedMemory.color || '#ffffff'} />
+
           <button type="submit">Save</button>
+          
         </form>
       )}
 
@@ -293,11 +300,12 @@ function App() {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
+            color: 'black'
           }}
         >
           <div>
-            <h3 style={{ marginBottom: '8px', color: '#8fdcff' }}>{selectedMemory.title}</h3>
-            <p><strong style={{ color: '#8fdcff' }}>Content:</strong> {selectedMemory.content}</p>
+            <h3 style={{ marginBottom: '8px', color: '#000' }}>{selectedMemory.title}</h3>
+            <p><strong style={{ color: '#000' }}>Content:</strong> {selectedMemory.content}</p>
           </div>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '8px' }}>
             <button style={{ padding: '6px 12px' }} onClick={() => setSelectedMemory(null)}>Close</button>
