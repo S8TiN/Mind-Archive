@@ -256,14 +256,14 @@ function App() {
           }}
           style={{
             position: 'fixed',
-            top: '100px',
-            right: '20px',
+            bottom: '20px',
+            right: '30px',
             backgroundColor: 'white',
             padding: '16px',
             borderRadius: '8px',
             boxShadow: '0 0 10px rgba(0,0,0,0.2)',
             zIndex: 10,
-            maxWidth: '300px',
+            width: '300px',
             display: 'flex',
             flexDirection: 'column',
             gap: '12px',
@@ -281,25 +281,29 @@ function App() {
         <div
           style={{
             position: 'fixed',
-            top: '100px',
-            right: '20px',
+            bottom: '20px',
+            right: '30px',
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            padding: '16px',
-            borderRadius: '12px',
+            padding: '24px',
+            borderRadius: '16px',
             boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
-            maxWidth: '280px',
+            width: '300px',
+            height: '220px',
             zIndex: 10,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'stretch',
-            gap: '10px',
+            justifyContent: 'space-between',
           }}
         >
-          <h3 style={{ margin: '0 0 8px 0' }}>{selectedMemory.title}</h3>
-          <p style={{ marginBottom: '12px' }}><strong>Content:</strong> {selectedMemory.content}</p>
-          <button onClick={() => setSelectedMemory(null)}>Close</button>
-          <button onClick={() => setEditing(true)}>Edit</button>
-          <button onClick={() => handleDelete(selectedMemory.id)} style={{ backgroundColor: '#ff4d4d', color: 'white' }}>Delete</button>
+          <div>
+            <h3 style={{ marginBottom: '8px', color: '#8fdcff' }}>{selectedMemory.title}</h3>
+            <p><strong style={{ color: '#8fdcff' }}>Content:</strong> {selectedMemory.content}</p>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '8px' }}>
+            <button style={{ padding: '6px 12px' }} onClick={() => setSelectedMemory(null)}>Close</button>
+            <button style={{ backgroundColor: '#007bff', color: 'white', padding: '6px 12px' }} onClick={() => setEditing(true)}>Edit</button>
+            <button style={{ backgroundColor: '#ff4d4d', color: 'white', padding: '6px 12px' }} onClick={() => handleDelete(selectedMemory.id)}>Delete</button>
+          </div>
         </div>
       )}
 
