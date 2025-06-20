@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 function NewMemoryForm({ onAdd }) {
   const [title, setTitle] = useState('');
@@ -42,12 +43,11 @@ function NewMemoryForm({ onAdd }) {
     });
 
     if (response.ok) {
+      toast.success("Memory saved!");
       onAdd();
       setTitle('');
       setContent('');
-      setColor('#ffffff'); // Reset color too
-    } else {
-      alert('Failed to save memory.');
+      setColor('#ffffff');
     }
   };
 

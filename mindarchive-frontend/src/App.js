@@ -1,3 +1,6 @@
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useEffect, useState, useRef } from 'react';
 import NewMemoryForm from './NewMemoryForm';
 import Login from './Login';
@@ -108,8 +111,11 @@ function App() {
       method: 'DELETE',
     });
     if (response.ok) {
+      toast.success("Memory deleted.");
       setMemories(prev => prev.filter(m => m.id !== id));
       setSelectedMemory(null);
+    } else {
+      toast.error("Failed to delete memory.");
     }
   };
 
@@ -209,13 +215,14 @@ function App() {
 
             if (res.ok) {
               const updated = await res.json();
+              toast.success("Memory updated");
               setMemories((prev) =>
                 prev.map((m) => (m.id === updated.id ? updated : m))
               );
               setEditing(false);
               setSelectedMemory(null);
             } else {
-              alert('Failed to update memory');
+              toast.error("Failed to update memory.");
             }
           }}
           style={{
@@ -349,6 +356,8 @@ function App() {
           </button>
         </div>
       )}
+
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 }
