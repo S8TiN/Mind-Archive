@@ -1,12 +1,15 @@
+// src/App.js
 import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import NewMemoryForm from './NewMemoryForm';
 import Login from './Login';
 import './App.css';
+import { ThemeContext } from './ThemeContext';
 
 function App() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const [memories, setMemories] = useState([]);
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -124,9 +127,35 @@ function App() {
   }
 
   return (
-    <div style={{ background: '#000', overflowY: 'scroll', height: '100vh', padding: '16px' }}>
-      <h1 style={{ color: '#8fdcff', marginBottom: '8px' }}>Mind Archive 🌌</h1>
-      <p style={{ color: '#8fdcff' }}>Welcome, {user.username}!</p>
+    <div
+      style={{
+        background: theme === 'dark' ? '#000' : '#fff',
+        color: theme === 'dark' ? '#8fdcff' : '#1a1a1a',
+        overflowY: 'scroll',
+        height: '100vh',
+        padding: '16px',
+        position: 'relative',
+      }}
+    >
+      <button
+        onClick={toggleTheme}
+        style={{
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem',
+          fontSize: '1.5rem',
+          background: 'none',
+          border: 'none',
+          color: 'inherit',
+          cursor: 'pointer',
+          zIndex: 1000,
+        }}
+      >
+        {theme === 'light' ? '🌙' : '☀️'}
+      </button>
+
+      <h1 style={{ marginBottom: '8px' }}>Mind Archive 🌌</h1>
+      <p>Welcome, {user.username}!</p>
 
       <NewMemoryForm onAdd={() => {
         fetch('http://127.0.0.1:8000/api/memories/')
@@ -145,8 +174,8 @@ function App() {
           >
             <div
               style={{
-                position: 'absolute', top: '10px', left: '20px', backgroundColor: '#000',
-                color: '#8fdcff', fontSize: '18px', fontWeight: 'bold', padding: '4px 8px',
+                position: 'absolute', top: '10px', left: '20px', backgroundColor: theme === 'dark' ? '#000' : '#fff',
+                color: theme === 'dark' ? '#8fdcff' : '#1a1a1a', fontSize: '18px', fontWeight: 'bold', padding: '4px 8px',
                 borderRadius: '4px', zIndex: 5
               }}
             >
@@ -197,7 +226,7 @@ function App() {
         );
       })}
 
-      {editing && selectedMemory && (
+      {selectedMemory && editing && (
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -227,7 +256,7 @@ function App() {
           }}
           style={{
             position: 'fixed',
-            top: '20px',
+            top: '100px',
             right: '20px',
             backgroundColor: 'white',
             padding: '16px',
@@ -241,63 +270,18 @@ function App() {
           }}
         >
           <h3>Edit Memory</h3>
-
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label style={{ marginBottom: '4px', color: '#000' }}>Date:</label>
-            <input
-              type="date"
-              name="title"
-              defaultValue={selectedMemory.title}
-              required
-              style={{ padding: '6px', width: '100%' }}
-            />
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label style={{ marginBottom: '4px', color: '#000' }}>Memory:</label>
-            <textarea
-              name="content"
-              defaultValue={selectedMemory.content}
-              required
-              rows={4}
-              style={{ padding: '6px', width: '100%' }}
-            />
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label style={{ marginBottom: '4px', color: '#000' }}>Color:</label>
-            <input
-              type="color"
-              name="color"
-              defaultValue={selectedMemory.color || '#ffffff'}
-              style={{ width: '100%' }}
-            />
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
-            <button
-              type="submit"
-              style={{ backgroundColor: '#4da6ff', color: 'white', padding: '6px 12px', borderRadius: '4px' }}
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              onClick={() => setEditing(false)}
-              style={{ backgroundColor: '#ccc', color: '#333', padding: '6px 12px', borderRadius: '4px' }}
-            >
-              Cancel
-            </button>
-          </div>
+          <input name="title" type="date" defaultValue={selectedMemory.title} required />
+          <textarea name="content" defaultValue={selectedMemory.content} required rows={4} />
+          <input name="color" type="color" defaultValue={selectedMemory.color || '#ffffff'} />
+          <button type="submit">Save</button>
         </form>
       )}
-
 
       {selectedMemory && !editing && (
         <div
           style={{
             position: 'fixed',
-            top: '20px',
+            top: '100px',
             right: '20px',
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
             padding: '16px',
@@ -311,49 +295,11 @@ function App() {
             gap: '10px',
           }}
         >
-          <h3 style={{ margin: '0 0 8px 0', color: '#333' }}>{selectedMemory.title}</h3>
-          <p style={{ marginBottom: '12px', color: '#444' }}>
-            <strong>Content:</strong> {selectedMemory.content}
-          </p>
-          <button
-            onClick={() => setSelectedMemory(null)}
-            style={{
-              backgroundColor: '#e0e0e0',
-              color: '#333',
-              padding: '8px',
-              borderRadius: '6px',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
-            Close
-          </button>
-          <button
-            onClick={() => setEditing(true)}
-            style={{
-              backgroundColor: '#4da6ff',
-              color: 'white',
-              padding: '8px',
-              borderRadius: '6px',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => handleDelete(selectedMemory.id)}
-            style={{
-              backgroundColor: '#ff4d4d',
-              color: 'white',
-              padding: '8px',
-              borderRadius: '6px',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
-            Delete
-          </button>
+          <h3 style={{ margin: '0 0 8px 0' }}>{selectedMemory.title}</h3>
+          <p style={{ marginBottom: '12px' }}><strong>Content:</strong> {selectedMemory.content}</p>
+          <button onClick={() => setSelectedMemory(null)}>Close</button>
+          <button onClick={() => setEditing(true)}>Edit</button>
+          <button onClick={() => handleDelete(selectedMemory.id)} style={{ backgroundColor: '#ff4d4d', color: 'white' }}>Delete</button>
         </div>
       )}
 

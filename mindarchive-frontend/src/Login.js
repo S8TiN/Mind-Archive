@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+// src/Login.js
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ThemeContext } from './ThemeContext';
 
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useContext(ThemeContext); // ⬅️ Grab theme/toggle
 
   useEffect(() => {
     fetchCSRFToken();
 
-    // Google Sign-In setup
     if (window.google) {
       window.google.accounts.id.initialize({
         client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
@@ -109,16 +111,34 @@ function Login({ onLoginSuccess }) {
   return (
     <div
       style={{
-        background: '#000',
-        color: '#8fdcff',
+        background: theme === 'dark' ? '#000' : '#fff',
+        color: theme === 'dark' ? '#8fdcff' : '#1a1a1a',
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         padding: '20px',
+        position: 'relative',
       }}
     >
+      {/* Theme Toggle in top-right */}
+      <button
+        onClick={toggleTheme}
+        style={{
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem',
+          fontSize: '1.5rem',
+          background: 'none',
+          border: 'none',
+          color: 'inherit',
+          cursor: 'pointer',
+        }}
+      >
+        {theme === 'light' ? '🌙' : '☀️'}
+      </button>
+
       <h1>Welcome to Mind Archive 🌌</h1>
       <p>Please sign in to continue</p>
 
