@@ -14,6 +14,7 @@ function App() {
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [editing, setEditing] = useState(false);
   const [draggingId, setDraggingId] = useState(null);
+  const [hoveredMemoryId, setHoveredMemoryId] = useState(null);
   const [user, setUser] = useState(null);
 
   const containerRefs = useRef({});
@@ -214,12 +215,41 @@ function App() {
                     setDraggingId(memory.id);
                     sectionIndexRef.current = index;
                   }}
+                  onMouseEnter={() => setHoveredMemoryId(memory.id)}
+                  onMouseLeave={() => setHoveredMemoryId(null)}
                   style={{
-                    position: 'absolute', left: `${x}%`, top: `${y}%`, width: '10px', height: '10px',
-                    borderRadius: '50%', backgroundColor: memory.color || '#ffffff', boxShadow: `0 0 8px 2px ${memory.color || '#8fdcff'}`,
-                    cursor: 'grab', transform: 'translate(-50%, -50%)', zIndex: 1
+                    position: 'absolute',
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
+                    backgroundColor: memory.color || '#ffffff',
+                    boxShadow: `0 0 8px 2px ${memory.color || '#8fdcff'}`,
+                    cursor: 'grab',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 1
                   }}
-                />
+                >
+                  {hoveredMemoryId === memory.id && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '-32px',
+                        left: '10px',
+                        backgroundColor: theme === 'dark' ? '#111' : '#f1f1f1',
+                        color: theme === 'dark' ? '#8fdcff' : '#222',
+                        padding: '6px 10px',
+                        borderRadius: '8px',
+                        fontSize: '0.75rem',
+                        whiteSpace: 'nowrap',
+                        zIndex: 5
+                      }}
+                    >
+                      {memory.title}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
