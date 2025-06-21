@@ -140,6 +140,10 @@ function Login({ onLoginSuccess }) {
       </button>
 
       <h1>Welcome to Mind Archive 🌌</h1>
+      <p className="intro-text">
+        The web app that allows you to record life’s key moments and explore your memories in a visual, evolving space.
+      </p>
+
       <p>Please sign in to continue</p>
 
       <div id="g-signin" style={{ marginBottom: '20px' }}></div>
