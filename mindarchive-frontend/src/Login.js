@@ -54,11 +54,19 @@ function Login({ onLoginSuccess }) {
       const data = await res.json();
       if (res.ok) {
         console.log('Google login success:', data);
-        if (onLoginSuccess) {
-          onLoginSuccess();
+        if (data.token && data.user) {
+          localStorage.setItem("authToken", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
+
+          if (onLoginSuccess) {
+            onLoginSuccess();
+          } else {
+            navigate('/dashboard');
+          }
         } else {
-          navigate('/dashboard');
+          alert("Login failed: Missing user data");
         }
+
       } else {
         alert('Google login failed: ' + (data.error || ''));
       }

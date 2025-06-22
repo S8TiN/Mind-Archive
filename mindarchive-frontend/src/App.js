@@ -16,6 +16,7 @@ function App() {
   const [draggingId, setDraggingId] = useState(null);
   const [hoveredMemoryId, setHoveredMemoryId] = useState(null);
   const [user, setUser] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
 
   const containerRefs = useRef({});
   const sectionIndexRef = useRef(null);
@@ -138,22 +139,57 @@ function App() {
         position: 'relative',
       }}
     >
-      <button
-        onClick={toggleTheme}
+          {/* 🌐 Profile picture dropdown toggle */}
+    <div 
+      style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 1000 }}>
+      <img
+        src={JSON.parse(localStorage.getItem('user'))?.picture}
+        alt="Profile"
+        onClick={() => setShowMenu(prev => !prev)}
         style={{
-          position: 'absolute',
-          top: '1rem',
-          right: '1rem',
-          fontSize: '1.5rem',
-          background: 'none',
-          border: 'none',
-          color: 'inherit',
+          width: 35,
+          height: 35,
+          borderRadius: '50%',
           cursor: 'pointer',
-          zIndex: 1000,
+          border: theme === 'dark' ? '2px solid #8fdcff' : '2px solid #333'
         }}
-      >
-        {theme === 'light' ? '🌙' : '☀️'}
-      </button>
+      />
+      {showMenu && (
+        <div style={{
+          position: 'absolute',
+          top: 50,
+          right: 0,
+          backgroundColor: theme === 'dark' ? '#111' : '#fff',
+          color: theme === 'dark' ? '#fff' : '#000',
+          boxShadow: '0px 4px 12px rgba(0,0,0,0.15)',
+          borderRadius: '8px',
+          padding: '10px',
+          zIndex: 100,
+          minWidth: '150px'
+        }}>
+          <div
+            onClick={() => {
+              toggleTheme();
+              setShowMenu(false);
+            }}
+            style={{ padding: '8px', cursor: 'pointer' }}
+          >
+            🌗 Toggle Dark Mode
+          </div>
+          <div
+            onClick={() => {
+              localStorage.removeItem("authToken");
+              localStorage.removeItem("user");
+              window.location.href = "/login";
+            }}
+            style={{ padding: '8px', cursor: 'pointer' }}
+          >
+            🚪 Logout
+          </div>
+        </div>
+      )}
+    </div>
+
 
       <h1 style={{ marginBottom: '8px' }}>Mind Archive 🌌</h1>
       <p>Welcome, {user.username}!</p>

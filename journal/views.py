@@ -26,9 +26,13 @@ class MemoryEntryViewSet(viewsets.ModelViewSet):
 @login_required
 def user_info(request):
     user = request.user
+    social = user.socialaccount_set.first()
+    picture = social.get_avatar_url() if social else None
+
     return JsonResponse({
         "username": user.username,
         "email": user.email,
+        "picture": picture
     })
 
 @require_GET
@@ -36,7 +40,7 @@ def user_info(request):
 def get_csrf_token(request):
     return JsonResponse({'message': 'CSRF cookie set'})
 
-# ✅ Final Google login view (no DRF, safe to use)
+# ✅ Final Google login view (with profile picture)
 @csrf_exempt
 @require_POST
 def google_login(request):
@@ -46,19 +50,33 @@ def google_login(request):
         if not token:
             return JsonResponse({"error": "Missing token"}, status=400)
 
+        # Verify Google token
         idinfo = id_token.verify_oauth2_token(
             token,
             google_requests.Request(),
             os.getenv("GOOGLE_CLIENT_ID")
         )
 
+        # Extract user info
         email = idinfo["email"]
-        username = email.split("@")[0]
+        name = idinfo.get("name", email.split("@")[0])
+        picture = idinfo.get("picture")  # ✅ profile image
 
-        user, created = User.objects.get_or_create(email=email, defaults={"username": username})
+        # Create or get the user
+        user, created = User.objects.get_or_create(
+            email=email,
+            defaults={"username": email.split("@")[0]}
+        )
         login(request, user)
 
-        return JsonResponse({"message": "Login successful"})
+        return JsonResponse({
+            "token": "session",  # placeholder
+            "user": {
+                "name": name,
+                "email": email,
+                "picture": picture
+            }
+        })
 
     except ValueError:
         return JsonResponse({"error": "Invalid token"}, status=401)
