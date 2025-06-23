@@ -367,7 +367,7 @@ function App() {
             borderRadius: '16px',
             boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
             width: '300px',
-            height: '220px',
+            height: '350px',
             zIndex: 10,
             display: 'flex',
             flexDirection: 'column',
