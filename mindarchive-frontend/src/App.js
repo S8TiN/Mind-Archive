@@ -143,12 +143,13 @@ function App() {
     <div 
       style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 1000 }}>
       <img
-        src={JSON.parse(localStorage.getItem('user'))?.picture}
+        src={user?.picture || "/default-profile.png"}
         alt="Profile"
         onClick={() => setShowMenu(prev => !prev)}
         style={{
           width: 35,
           height: 35,
+          objectFit: 'cover',
           borderRadius: '50%',
           cursor: 'pointer',
           border: theme === 'dark' ? '2px solid #8fdcff' : '2px solid #333'
