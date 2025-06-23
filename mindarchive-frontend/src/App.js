@@ -89,12 +89,20 @@ function App() {
   const getMonthYear = (title) => {
     const date = new Date(title);
     if (isNaN(date)) return 'unknown';
+
+    if (date.getUTCDate() === 1) {
+      // Shift by +1 day to avoid timezone misclassification
+      date.setUTCDate(date.getUTCDate() + 1);
+    }
+
     const monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
-    return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+
+    return `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
   };
+
 
   const groupedMemories = memories.reduce((acc, memory) => {
     const key = getMonthYear(memory.title);
