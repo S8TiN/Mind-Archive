@@ -7,6 +7,7 @@ function NewMemoryForm({ onAdd }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [color, setColor] = useState('#ffffff'); 
+  const [image, setImage] = useState(null);
 
   const getCSRFTokenFromCookie = () => {
     const name = 'csrftoken=';
@@ -23,25 +24,31 @@ function NewMemoryForm({ onAdd }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newMemory = {
-      title,
-      content,
-      color, 
-      x: (Math.random() * 80 + 10).toFixed(2),
-      y: (Math.random() * 80 + 10).toFixed(2),
-    };
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('color', color);
+    formData.append('x', (Math.random() * 80 + 10).toFixed(2));
+    formData.append('y', (Math.random() * 80 + 10).toFixed(2));
+    if (image) {
+      formData.append('image', image);
+    }
+
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ':', pair[1]);
+    }
 
     const csrfToken = getCSRFTokenFromCookie();
 
     const response = await fetch('http://127.0.0.1:8000/api/memories/', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'X-CSRFToken': csrfToken,
       },
       credentials: 'include',
-      body: JSON.stringify(newMemory),
+      body: formData,
     });
+
 
     if (response.ok) {
       toast.success("Memory saved");
@@ -49,6 +56,7 @@ function NewMemoryForm({ onAdd }) {
       setTitle('');
       setContent('');
       setColor('#ffffff');
+      setImage(null);
     }
   };
 
@@ -96,6 +104,18 @@ function NewMemoryForm({ onAdd }) {
           value={color}
           onChange={(e) => setColor(e.target.value)}
           style={{ width: '100%' }}
+        />
+      </div>
+
+      <div
+        style={{ display: 'flex', flexDirection: 'column' }}>
+        <label htmlFor="image" style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Image:</label>
+        <input
+          id="image"
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files[0])}
+          style={{ padding: '6px' }}
         />
       </div>
 

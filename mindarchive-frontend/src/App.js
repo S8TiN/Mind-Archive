@@ -378,6 +378,20 @@ function App() {
           <div>
             <h3 style={{ marginBottom: '8px', color: '#000' }}>{selectedMemory.title}</h3>
             <p><strong style={{ color: '#000' }}>Content:</strong> {selectedMemory.content}</p>
+
+            {selectedMemory.image && (
+              <img
+                src={selectedMemory.image}
+                alt="Memory"
+                style={{
+                  marginTop: '12px',
+                  maxWidth: '100%',
+                  borderRadius: '8px',
+                  objectFit: 'cover',
+                }}
+              />
+            )}
+
           </div>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '8px' }}>
             <button style={{ padding: '6px 12px' }} onClick={() => setSelectedMemory(null)}>Close</button>
