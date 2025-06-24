@@ -68,11 +68,21 @@ function App() {
       if (!draggingId) return;
       const memory = memories.find((m) => m.id === draggingId);
       if (memory) {
+        const getCSRFTokenFromCookie = () => {
+          const match = document.cookie.match(/csrftoken=([\w-]+)/);
+          return match ? match[1] : '';
+        };
+
         fetch(`http://127.0.0.1:8000/api/memories/${memory.id}/`, {
           method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFTokenFromCookie(),
+          },
+          credentials: 'include',
           body: JSON.stringify({ x: memory.x, y: memory.y }),
         });
+
       }
       setDraggingId(null);
       sectionIndexRef.current = null;

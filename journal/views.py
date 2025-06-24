@@ -13,7 +13,7 @@ from .serializers import MemoryEntrySerializer
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 load_dotenv()
 
@@ -23,7 +23,7 @@ def home(request):
 class MemoryEntryViewSet(viewsets.ModelViewSet):
     queryset = MemoryEntry.objects.all()
     serializer_class = MemoryEntrySerializer
-    parser_classes = [MultiPartParser, FormParser] #allow image/form uploads
+    parser_classes = [MultiPartParser, FormParser, JSONParser] #allow image/form uploads
 
 @login_required
 def user_info(request):
