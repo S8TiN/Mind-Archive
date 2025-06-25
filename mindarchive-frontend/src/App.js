@@ -181,7 +181,15 @@ function App() {
               toggleTheme();
               setShowMenu(false);
             }}
-            style={{ padding: '8px', cursor: 'pointer' }}
+            style={{
+              padding: '8px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              width: '150px', // Adjust this if needed
+              whiteSpace: 'nowrap',
+              gap: '8px',
+            }}
           >
             🌗 Toggle Dark Mode
           </div>
@@ -191,7 +199,15 @@ function App() {
               localStorage.removeItem("user");
               window.location.href = "/login";
             }}
-            style={{ padding: '8px', cursor: 'pointer' }}
+            style={{
+              padding: '8px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              width: '150px', // Adjust this if needed
+              whiteSpace: 'nowrap',
+              gap: '8px',
+            }}
           >
             🚪 Logout
           </div>
