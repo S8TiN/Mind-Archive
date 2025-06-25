@@ -68,21 +68,11 @@ function App() {
       if (!draggingId) return;
       const memory = memories.find((m) => m.id === draggingId);
       if (memory) {
-        const getCSRFTokenFromCookie = () => {
-          const match = document.cookie.match(/csrftoken=([\w-]+)/);
-          return match ? match[1] : '';
-        };
-
         fetch(`http://127.0.0.1:8000/api/memories/${memory.id}/`, {
           method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCSRFTokenFromCookie(),
-          },
-          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ x: memory.x, y: memory.y }),
         });
-
       }
       setDraggingId(null);
       sectionIndexRef.current = null;
@@ -211,7 +201,9 @@ function App() {
 
 
       <h1 style={{ marginBottom: '8px' }}>Mind Archive 🌌</h1>
-      <p>Welcome, {user.username}!</p>
+      <p style={{ fontSize: '20px', fontWeight: 'bold' }}>
+        Welcome, {user.username}!
+      </p>
 
       <NewMemoryForm onAdd={() => {
         fetch('http://127.0.0.1:8000/api/memories/')
