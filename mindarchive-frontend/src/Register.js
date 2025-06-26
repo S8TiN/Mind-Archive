@@ -23,25 +23,35 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("/api/register/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username,
-        password,
-        profile_picture: selectedAvatar
-      })
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      navigate("/dashboard");
-    } else {
-      setError(data.error || "Registration failed");
+    if (!username || !password || !selectedAvatar) {
+        setError("All fields including avatar selection are required.");
+        return;
     }
-  };
+
+    try {
+        const response = await fetch("/api/register/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username,
+            password,
+            profile_picture: selectedAvatar
+        })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+        navigate("/dashboard");
+        } else {
+        setError(data.error || "Registration failed");
+        }
+    } catch (err) {
+        setError("Something went wrong. Please try again.");
+    }
+    };
+
 
   return (
     <div style={{ padding: "2rem", maxWidth: "400px", margin: "0 auto" }}>
@@ -82,7 +92,21 @@ const Register = () => {
             />
           ))}
         </div>
-        <button type="submit">Sign Up</button>
+        <button
+            type="submit"
+            disabled={!username || !password || !selectedAvatar}
+            style={{
+                padding: "10px 16px",
+                backgroundColor: (!username || !password || !selectedAvatar) ? "#ccc" : "#4A90E2",
+                cursor: (!username || !password || !selectedAvatar) ? "not-allowed" : "pointer",
+                color: "white",
+                border: "none",
+                borderRadius: "4px"
+            }}
+            >
+            Sign Up
+            </button>
+
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
     </div>

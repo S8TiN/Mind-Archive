@@ -93,7 +93,7 @@ def register_user(request):
 
         username = data.get("username")
         password = data.get("password")
-        profile_picture = data.get("profile_picture", "avatar1.png")  # default
+        profile_picture = data["profile_picture"]
 
         if not username or not password:
             return JsonResponse({"error": "Username and password are required"}, status=400)
