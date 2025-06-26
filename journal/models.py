@@ -8,6 +8,7 @@ class MemoryEntry(models.Model):
     x = models.FloatField(help_text="X position for star display")
     y = models.FloatField(help_text="Y position for star display")
     image = models.ImageField(upload_to='memory_images/', null=True, blank=True)
+    profile_picture = models.CharField(max_length=255, default='avatar1.png')
 
     def __str__(self):
         return self.title

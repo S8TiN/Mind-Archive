@@ -84,3 +84,37 @@ def google_login(request):
         return JsonResponse({"error": "Invalid token"}, status=401)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+    
+@csrf_exempt
+@require_POST
+def register_user(request):
+    try:
+        data = json.loads(request.body)
+
+        username = data.get("username")
+        password = data.get("password")
+        profile_picture = data.get("profile_picture", "avatar1.png")  # default
+
+        if not username or not password:
+            return JsonResponse({"error": "Username and password are required"}, status=400)
+
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({"error": "Username already taken"}, status=400)
+
+        user = User.objects.create_user(username=username, password=password)
+        user.profile_picture = profile_picture  # ✅ make sure this field exists
+        user.save()
+
+        login(request, user)
+
+        return JsonResponse({
+            "token": "session",
+            "user": {
+                "username": user.username,
+                "profile_picture": user.profile_picture
+            }
+        })
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+

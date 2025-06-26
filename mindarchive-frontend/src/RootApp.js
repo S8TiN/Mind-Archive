@@ -3,6 +3,8 @@ import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Login from './Login';
 import Dashboard from './App';
+import Register from './Register';
+console.log("Register component is:", Register);
 
 function RequireAuth({ children }) {
   const token = localStorage.getItem('authToken');
@@ -19,6 +21,7 @@ function RootApp() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route
         path="/dashboard"
         element={
