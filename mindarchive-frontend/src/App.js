@@ -151,7 +151,7 @@ function App() {
     <div 
       style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 1000 }}>
       <img
-        src={user?.picture || "/default-profile.png"}
+        src={user?.picture || "/avatars/avatar1.jpg"}
         alt="Profile"
         onClick={() => setShowMenu(prev => !prev)}
         style={{
@@ -186,7 +186,7 @@ function App() {
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              width: '150px', // Adjust this if needed
+              width: '150px', 
               whiteSpace: 'nowrap',
               gap: '8px',
             }}
@@ -204,7 +204,7 @@ function App() {
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              width: '150px', // Adjust this if needed
+              width: '150px',
               whiteSpace: 'nowrap',
               gap: '8px',
             }}

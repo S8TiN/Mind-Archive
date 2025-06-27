@@ -175,6 +175,21 @@ function Login({ onLoginSuccess }) {
         />
         <button type="submit" style={{ padding: '8px 16px' }}>Log In</button>
       </form>
+
+      <div style={{ marginTop: '1rem' }}>
+        <span>Don't have an account? </span>
+        <span
+          onClick={() => navigate("/register")}
+          style={{
+            color: theme === "dark" ? "#8fdcff" : "#007bff",
+            textDecoration: "underline",
+            cursor: "pointer"
+          }}
+        >
+          Create one here
+        </span>
+      </div>
+
     </div>
   );
 }
