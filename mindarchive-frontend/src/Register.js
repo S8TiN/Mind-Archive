@@ -115,8 +115,9 @@ const Register = () => {
             style={{
               display: "flex",
               flexWrap: "wrap",
-              gap: "12px",
-              marginBottom: "1rem"
+              gap: "20px",
+              justifyContent: "center",
+              marginBottom: "1.25rem"
             }}
           >
             {avatars.map((avatar) => (
