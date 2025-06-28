@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [selectedAvatar, setSelectedAvatar] = useState("OIP.jpg");
+  const [selectedAvatar, setSelectedAvatar] = useState("avatar1.jpg");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -15,100 +15,161 @@ const Register = () => {
     "avatar4.jpg",
     "avatar5.jpg",
     "avatar6.webp",
-    "avatar7.png"
-    ];
-
-
+    "avatar7.png",
+    "avatar8.jpg",
+    "avatar9.jpg",
+    "avatar10.jpg"
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!username || !password || !selectedAvatar) {
-        setError("All fields including avatar selection are required.");
-        return;
+      setError("All fields including avatar selection are required.");
+      return;
     }
 
     try {
-        const response = await fetch("/api/register/", {
+      const response = await fetch("/api/register/", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            username,
-            password,
-            profile_picture: selectedAvatar
+          username,
+          password,
+          profile_picture: selectedAvatar
         })
-        });
+      });
 
-        const data = await response.json();
-        if (response.ok) {
+      const data = await response.json();
+      if (response.ok) {
         navigate("/dashboard");
-        } else {
+      } else {
         setError(data.error || "Registration failed");
-        }
+      }
     } catch (err) {
-        setError("Something went wrong. Please try again.");
+      setError("Something went wrong. Please try again.");
     }
-    };
-
+  };
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "400px", margin: "0 auto" }}>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-          style={{ display: "block", marginBottom: "1rem", width: "100%" }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{ display: "block", marginBottom: "1rem", width: "100%" }}
-        />
-        <p>Select an avatar:</p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", marginBottom: "1rem" }}>
-          {avatars.map((avatar) => (
-            <img
-              key={avatar}
-              src={`/avatars/${avatar}`}
-              alt={avatar}
-              onClick={() => setSelectedAvatar(avatar)}
-              style={{
-                width: "64px",
-                height: "64px",
-                borderRadius: "50%",
-                border: selectedAvatar === avatar ? "3px solid #4A90E2" : "2px solid gray",
-                cursor: "pointer",
-                objectFit: "cover"
-              }}
-            />
-          ))}
-        </div>
-        <button
+    <div
+      style={{
+        backgroundImage:
+          'url("https://www.hdwallpapers.in/download/black_and_white_picture_of_stars_during_nighttime_4k_5k_hd_galaxy-3840x2160.jpg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontFamily: "'Segoe UI', sans-serif"
+      }}
+    >
+      <div
+        style={{
+          background: "rgba(0, 0, 0, 0.75)",
+          padding: "2rem",
+          borderRadius: "16px",
+          maxWidth: "420px",
+          width: "100%",
+          color: "white",
+          boxShadow: "0 4px 15px rgba(0,0,0,0.3)"
+        }}
+      >
+        <h2 style={{ textAlign: "center", marginBottom: "1rem", fontSize: "28px" }}>Register</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            style={{
+              display: "block",
+              marginBottom: "1rem",
+              width: "100%",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "none"
+            }}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{
+              display: "block",
+              marginBottom: "1rem",
+              width: "100%",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "none"
+            }}
+          />
+          <p style={{ marginBottom: "0.5rem" }}>Select an avatar:</p>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "12px",
+              marginBottom: "1rem"
+            }}
+          >
+            {avatars.map((avatar) => (
+              <img
+                key={avatar}
+                src={`/avatars/${avatar}`}
+                alt={avatar}
+                onClick={() => setSelectedAvatar(avatar)}
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "50%",
+                  border:
+                    selectedAvatar === avatar
+                      ? "3px solid #8fdcff"
+                      : "2px solid gray",
+                  cursor: "pointer",
+                  objectFit: "cover",
+                  transition: "transform 0.2s ease-in-out",
+                  transform:
+                    selectedAvatar === avatar ? "scale(1.1)" : "scale(1)"
+                }}
+              />
+            ))}
+          </div>
+          <button
             type="submit"
             disabled={!username || !password || !selectedAvatar}
             style={{
-                padding: "10px 16px",
-                backgroundColor: (!username || !password || !selectedAvatar) ? "#ccc" : "#4A90E2",
-                cursor: (!username || !password || !selectedAvatar) ? "not-allowed" : "pointer",
-                color: "white",
-                border: "none",
-                borderRadius: "4px"
+              width: "100%",
+              padding: "12px",
+              backgroundColor:
+                !username || !password || !selectedAvatar
+                  ? "#888"
+                  : "#8fdcff",
+              border: "none",
+              borderRadius: "8px",
+              cursor:
+                !username || !password || !selectedAvatar
+                  ? "not-allowed"
+                  : "pointer",
+              color: "#000",
+              fontWeight: "bold",
+              fontSize: "16px"
             }}
-            >
+          >
             Sign Up
-            </button>
-
-        {error && <p style={{ color: "red" }}>{error}</p>}
-      </form>
+          </button>
+          {error && (
+            <p style={{ color: "#ff7f7f", marginTop: "1rem" }}>{error}</p>
+          )}
+        </form>
+      </div>
     </div>
   );
 };
