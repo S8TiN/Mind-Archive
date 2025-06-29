@@ -8,7 +8,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from .models import MemoryEntry
+from .models import MemoryEntry, MemoryImage
 from .serializers import MemoryEntrySerializer
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
@@ -23,7 +23,13 @@ def home(request):
 class MemoryEntryViewSet(viewsets.ModelViewSet):
     queryset = MemoryEntry.objects.all()
     serializer_class = MemoryEntrySerializer
-    parser_classes = [MultiPartParser, FormParser, JSONParser] #allow image/form uploads
+    parser_classes = [MultiPartParser, FormParser, JSONParser] 
+
+    def perform_create(self, serializer):
+        memory = serializer.save()
+        images = self.request.FILES.getlist('images')  # this expects form field name to be "images"
+        for image in images:
+            MemoryImage.objects.create(memory=memory, image=image)
 
 @login_required
 def user_info(request):

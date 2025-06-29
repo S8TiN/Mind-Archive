@@ -224,7 +224,10 @@ function App() {
       <NewMemoryForm onAdd={() => {
         fetch('http://127.0.0.1:8000/api/memories/')
           .then(res => res.json())
-          .then(data => setMemories(data));
+          .then(data => {
+            setMemories(data);
+            setSelectedMemory(null); 
+          });
       }} />
 
       {monthKeys.map((monthKey, index) => {
@@ -405,18 +408,23 @@ function App() {
             <h3 style={{ marginBottom: '8px', color: '#000' }}>{selectedMemory.title}</h3>
             <p><strong style={{ color: '#000' }}>Content:</strong> {selectedMemory.content}</p>
 
-            {selectedMemory.image && (
-              <img
-                src={selectedMemory.image}
-                alt="Memory"
-                style={{
-                  marginTop: '12px',
-                  maxWidth: '100%',
-                  borderRadius: '8px',
-                  objectFit: 'cover',
-                }}
-              />
+            {selectedMemory.images && selectedMemory.images.length > 0 && (
+              <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '120px', overflowY: 'auto' }}>
+                {selectedMemory.images.map((img, i) => (
+                  <img
+                    key={i}
+                    src={img.image}
+                    alt={`Memory ${i + 1}`}
+                    style={{
+                      maxWidth: '100%',
+                      borderRadius: '8px',
+                      objectFit: 'cover',
+                    }}
+                  />
+                ))}
+              </div>
             )}
+
 
           </div>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '8px' }}>

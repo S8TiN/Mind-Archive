@@ -7,7 +7,17 @@ function NewMemoryForm({ onAdd }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [color, setColor] = useState('#ffffff'); 
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
+
+  const handleImageChange = (index, file) => {
+    const newImages = [...images];
+    newImages[index] = file;
+    setImages(newImages);
+  };
+
+  const addImageInput = () => {
+    setImages([...images, null]);
+  };
 
   const getCSRFTokenFromCookie = () => {
     const name = 'csrftoken=';
@@ -30,9 +40,12 @@ function NewMemoryForm({ onAdd }) {
     formData.append('color', color);
     formData.append('x', (Math.random() * 80 + 10).toFixed(2));
     formData.append('y', (Math.random() * 80 + 10).toFixed(2));
-    if (image) {
-      formData.append('image', image);
-    }
+    images.forEach((img, index) => {
+      if (img) {
+        formData.append('images', img);  
+      }
+    });
+
 
     for (let pair of formData.entries()) {
       console.log(pair[0] + ':', pair[1]);
@@ -56,7 +69,7 @@ function NewMemoryForm({ onAdd }) {
       setTitle('');
       setContent('');
       setColor('#ffffff');
-      setImage(null);
+      setImages([]);
     }
   };
 
@@ -107,16 +120,31 @@ function NewMemoryForm({ onAdd }) {
         />
       </div>
 
-      <div
-        style={{ display: 'flex', flexDirection: 'column' }}>
-        <label htmlFor="image" style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Image:</label>
-        <input
-          id="image"
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
-          style={{ padding: '6px' }}
-        />
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <label style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Images:</label>
+        {images.map((img, index) => (
+          <input
+            key={index}
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageChange(index, e.target.files[0])}
+            style={{ padding: '6px', marginBottom: '6px' }}
+          />
+        ))}
+        <button
+          type="button"
+          onClick={addImageInput}
+          style={{
+            padding: '6px',
+            backgroundColor: '#e0e0e0',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            width: 'fit-content'
+          }}
+        >
+          + Add file
+        </button>
       </div>
 
       <button
