@@ -409,7 +409,7 @@ function App() {
             <p><strong style={{ color: '#000' }}>Content:</strong> {selectedMemory.content}</p>
 
             {selectedMemory.images && selectedMemory.images.length > 0 && (
-              <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '120px', overflowY: 'auto' }}>
+              <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '210px', overflowY: 'auto' }}>
                 {selectedMemory.images.map((img, i) => (
                   <img
                     key={i}
