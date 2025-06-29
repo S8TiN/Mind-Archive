@@ -7,7 +7,6 @@ function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useContext(ThemeContext); // ⬅️ Grab theme/toggle
 
   useEffect(() => {
     fetchCSRFToken();
@@ -119,8 +118,8 @@ function Login({ onLoginSuccess }) {
   return (
     <div
       style={{
-        background: theme === 'dark' ? '#000' : '#fff',
-        color: theme === 'dark' ? '#8fdcff' : '#1a1a1a',
+        background: 'black',
+        color: '#8fdcff',
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -130,22 +129,6 @@ function Login({ onLoginSuccess }) {
         position: 'relative',
       }}
     >
-      {/* Theme Toggle in top-right */}
-      <button
-        onClick={toggleTheme}
-        style={{
-          position: 'absolute',
-          top: '1rem',
-          right: '1rem',
-          fontSize: '1.5rem',
-          background: 'none',
-          border: 'none',
-          color: 'inherit',
-          cursor: 'pointer',
-        }}
-      >
-        {theme === 'light' ? '🌙' : '☀️'}
-      </button>
 
       <h1>Welcome to Mind Archive 🌌</h1>
       <p className="intro-text">
@@ -224,7 +207,7 @@ function Login({ onLoginSuccess }) {
         <span
           onClick={() => navigate("/register")}
           style={{
-            color: theme === "dark" ? "#8fdcff" : "#007bff",
+            color: "#8fdcff",
             textDecoration: "underline",
             cursor: "pointer"
           }}
