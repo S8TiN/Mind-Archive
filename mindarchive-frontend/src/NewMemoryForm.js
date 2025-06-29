@@ -7,13 +7,15 @@ function NewMemoryForm({ onAdd }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [color, setColor] = useState('#ffffff'); 
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([null]);
 
   const handleImageChange = (index, file) => {
+    if (!file) return;  //Prevents null uploads
     const newImages = [...images];
     newImages[index] = file;
     setImages(newImages);
   };
+
 
   const addImageInput = () => {
     setImages([...images, null]);
@@ -40,12 +42,9 @@ function NewMemoryForm({ onAdd }) {
     formData.append('color', color);
     formData.append('x', (Math.random() * 80 + 10).toFixed(2));
     formData.append('y', (Math.random() * 80 + 10).toFixed(2));
-    images.forEach((img, index) => {
-      if (img) {
-        formData.append('images', img);  
-      }
+    images.filter(Boolean).forEach(img => {
+      formData.append('images', img);
     });
-
 
     for (let pair of formData.entries()) {
       console.log(pair[0] + ':', pair[1]);
@@ -69,7 +68,7 @@ function NewMemoryForm({ onAdd }) {
       setTitle('');
       setContent('');
       setColor('#ffffff');
-      setImages([]);
+      setImages([null]);
     }
   };
 

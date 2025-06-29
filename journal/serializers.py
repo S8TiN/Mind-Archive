@@ -23,14 +23,4 @@ class MemoryEntrySerializer(serializers.ModelSerializer):
             'images',
         ]
 
-    def create(self, validated_data):
-        request = self.context.get('request')
-        images = request.FILES.getlist('images') if request else []
-
-        memory = MemoryEntry.objects.create(**validated_data)
-
-        for img in images:
-            MemoryImage.objects.create(memory=memory, image=img)
-
-        return memory
 

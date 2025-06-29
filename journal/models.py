@@ -7,7 +7,7 @@ class MemoryEntry(models.Model):
     color = models.CharField(max_length=7, default="#ffffff", help_text="Hex color of the star")
     x = models.FloatField(help_text="X position for star display")
     y = models.FloatField(help_text="Y position for star display")
-    image = models.ImageField(upload_to='memory_images/', null=True, blank=True)  # Optional: to be removed later
+    # image = models.ImageField(upload_to='memory_images/', null=True, blank=True)  # Optional: to be removed later
     profile_picture = models.CharField(max_length=255, default='avatar1.png')
 
     def __str__(self):
