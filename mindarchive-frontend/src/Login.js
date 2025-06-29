@@ -130,14 +130,12 @@ function Login({ onLoginSuccess }) {
       }}
     >
 
-      <h1>Welcome to Mind Archive 🌌</h1>
+      <h1>Welcome to Mind Archive</h1>
       <p className="intro-text">
         The web app that allows you to record life’s key moments and explore your memories in a visual, evolving space.
       </p>
 
       <p>Please sign in to continue</p>
-
-      <div id="g-signin" style={{ marginBottom: '20px' }}></div>
 
       <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <input
@@ -149,7 +147,7 @@ function Login({ onLoginSuccess }) {
           style={{
             marginBottom: '12px',
             padding: '12px',
-            width: '175px',
+            width: '150px',
             borderRadius: '12px',
             border: '1px solid #8fdcff',
             backgroundColor: 'rgba(255, 255, 255, 0.08)',
@@ -171,7 +169,7 @@ function Login({ onLoginSuccess }) {
           style={{
             marginBottom: '20px',
             padding: '12px',
-            width: '175px',
+            width: '150px',
             borderRadius: '12px',
             border: '1px solid #8fdcff',
             backgroundColor: 'rgba(255, 255, 255, 0.08)',
@@ -187,7 +185,7 @@ function Login({ onLoginSuccess }) {
         <button
           type="submit"
           style={{
-            width: '200px',          // Match input width
+            width: '175px',          // Match input width
             padding: '10px 0',
             backgroundColor: '#fff',
             color: '#000',
@@ -201,6 +199,8 @@ function Login({ onLoginSuccess }) {
         </button>
 
       </form>
+
+      <div id="g-signin" style={{ marginTop: '20px', marginBottom: '20px' }}></div>
 
       <div style={{ marginTop: '1rem' }}>
         <span>Don't have an account? </span>
