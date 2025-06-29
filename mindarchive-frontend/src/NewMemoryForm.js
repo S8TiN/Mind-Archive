@@ -7,7 +7,7 @@ function NewMemoryForm({ onAdd }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [color, setColor] = useState('#ffffff'); 
-  const [images, setImages] = useState([null]);
+  const [images, setImages] = useState([]);
 
   const handleImageChange = (index, file) => {
     if (!file) return;  //Prevents null uploads
@@ -68,7 +68,7 @@ function NewMemoryForm({ onAdd }) {
       setTitle('');
       setContent('');
       setColor('#ffffff');
-      setImages([null]);
+      setImages([]);
     }
   };
 
@@ -121,6 +121,17 @@ function NewMemoryForm({ onAdd }) {
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <label style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Images:</label>
+        {/* Initial choose file button if no files yet */}
+        {images.length === 0 && (
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageChange(0, e.target.files[0])}
+            style={{ padding: '6px', marginBottom: '6px' }}
+          />
+        )}
+
+        {/* Render all added file inputs */}
         {images.map((img, index) => (
           <input
             key={index}
@@ -130,6 +141,7 @@ function NewMemoryForm({ onAdd }) {
             style={{ padding: '6px', marginBottom: '6px' }}
           />
         ))}
+
         <button
           type="button"
           onClick={addImageInput}
