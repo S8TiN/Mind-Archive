@@ -163,17 +163,60 @@ function Login({ onLoginSuccess }) {
           value={username}
           required
           onChange={(e) => setUsername(e.target.value)}
-          style={{ marginBottom: '10px', padding: '8px' }}
+          style={{
+            marginBottom: '12px',
+            padding: '12px',
+            width: '175px',
+            borderRadius: '12px',
+            border: '1px solid #8fdcff',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            color: '#8fdcff',
+            fontSize: '16px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+            backdropFilter: 'blur(6px)',
+            outline: 'none',
+            transition: '0.3s ease'
+          }}
         />
+
         <input
           type="password"
           placeholder="Password"
           value={password}
           required
           onChange={(e) => setPassword(e.target.value)}
-          style={{ marginBottom: '10px', padding: '8px' }}
+          style={{
+            marginBottom: '20px',
+            padding: '12px',
+            width: '175px',
+            borderRadius: '12px',
+            border: '1px solid #8fdcff',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            color: '#8fdcff',
+            fontSize: '16px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+            backdropFilter: 'blur(6px)',
+            outline: 'none',
+            transition: '0.3s ease'
+          }}
         />
-        <button type="submit" style={{ padding: '8px 16px' }}>Log In</button>
+
+        <button
+          type="submit"
+          style={{
+            width: '200px',          // Match input width
+            padding: '10px 0',
+            backgroundColor: '#fff',
+            color: '#000',
+            border: 'none',
+            borderRadius: '6px',
+            fontWeight: 'bold',
+            cursor: 'pointer'
+          }}
+        >
+          Log In
+        </button>
+
       </form>
 
       <div style={{ marginTop: '1rem' }}>
