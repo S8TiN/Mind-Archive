@@ -3,13 +3,13 @@ import json
 from dotenv import load_dotenv
 
 from django.http import JsonResponse
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from .models import MemoryEntry, MemoryImage
-from .serializers import MemoryEntrySerializer
+from .serializers import MemoryEntrySerializer, MemoryImageSerializer
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
@@ -123,4 +123,8 @@ def register_user(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+    
+class MemoryImageDeleteView(generics.DestroyAPIView):
+    queryset = MemoryImage.objects.all()
+    serializer_class = MemoryImageSerializer
 

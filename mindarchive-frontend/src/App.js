@@ -326,17 +326,25 @@ function App() {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-            const updatedMemory = {
-              title: e.target.title.value,
-              content: e.target.content.value,
-              color: e.target.color.value,
-            };
+            const formData = new FormData();
+            formData.append("title", e.target.title.value);
+            formData.append("content", e.target.content.value);
+            formData.append("color", e.target.color.value);
+
+            // Append new image file
+            const imageFile = e.target.newImage.files[0];
+            if (imageFile) {
+              formData.append("image", imageFile);
+            }
 
             const res = await fetch(`http://127.0.0.1:8000/api/memories/${selectedMemory.id}/`, {
               method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(updatedMemory),
+              body: formData,
+              headers: {
+                // DON'T include 'Content-Type', let the browser set it
+              },
             });
+
 
             if (res.ok) {
               const updated = await res.json();
@@ -366,6 +374,7 @@ function App() {
           }}
         >
           <h3 style={{ color: '#000' }}>Edit Memory</h3>
+
           <label style={{ color: '#000' }}>Date:</label>
           <input name="title" type="date" defaultValue={selectedMemory.title} required />
 
@@ -374,16 +383,65 @@ function App() {
 
           <label style={{ color: '#000' }}>Color:</label>
           <input
-              name="color"
-              type="color"
-              defaultValue={selectedMemory.color || '#ffffff'}
-              style={{ width: '100%', height: '30px', padding: '4px' }}
+            name="color"
+            type="color"
+            defaultValue={selectedMemory.color || '#ffffff'}
+            style={{ width: '100%', height: '30px', padding: '4px' }}
           />
 
-          <button type="submit">Save</button>
-          
-        </form>
-      )}
+          {/* Existing images with delete buttons */}
+          {selectedMemory.images && selectedMemory.images.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <label style={{ color: '#000' }}>Existing Images:</label>
+              {selectedMemory.images.map((img, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <img
+                    src={img.image}
+                    alt={`Image ${i + 1}`}
+                    style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const res = await fetch(`http://127.0.0.1:8000/api/images/${img.id}/`, {
+                        method: 'DELETE',
+                      });
+
+                      if (res.ok) {
+                        const updatedImages = selectedMemory.images.filter(image => image.id !== img.id);
+                        setSelectedMemory({ ...selectedMemory, images: updatedImages });
+                        toast.success("Image deleted");
+                      } else {
+                        toast.error("Failed to delete image");
+                      }
+                    }}
+                    style={{
+                      backgroundColor: 'transparent',
+                      color: '#d00',
+                      border: 'none',
+                      fontSize: '16px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    ❌
+                  </button>
+
+                </div>
+              ))}
+            </div>
+          )}
+
+    <label style={{ color: '#000' }}>Add Image:</label>
+    <input
+      type="file"
+      name="newImage"
+      accept="image/*"
+    />
+
+    <button type="submit">Save</button>
+  </form>
+)}
+
 
       {selectedMemory && !editing && (
         <div
