@@ -59,3 +59,10 @@ body.light .intro-text {
   color: #111111;
 }
 
+input[type="file"]::file-selector-button {
+  color: black;
+}
+
+input[type="file"] {
+  color: black;
+}
