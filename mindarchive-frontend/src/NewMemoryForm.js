@@ -133,14 +133,50 @@ function NewMemoryForm({ onAdd }) {
 
         {/* Render all added file inputs */}
         {images.map((img, index) => (
-          <input
+          <div
             key={index}
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageChange(index, e.target.files[0])}
-            style={{ padding: '6px', marginBottom: '6px' }}
-          />
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '6px'
+            }}
+          >
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageChange(index, e.target.files[0])}
+              style={{
+                padding: '6px',
+                flexGrow: 1
+              }}
+            />
+
+            {index > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  const newImages = [...images];
+                  newImages.splice(index, 1);
+                  setImages(newImages);
+                }}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  color: theme === 'dark' ? '#ff8080' : '#cc0000',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  fontSize: '16px'
+                }}
+                aria-label="Remove image"
+              >
+                ❌
+              </button>
+            )}
+          </div>
         ))}
+
+
 
         <button
           type="button"
