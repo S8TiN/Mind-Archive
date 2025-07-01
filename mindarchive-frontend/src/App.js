@@ -373,6 +373,25 @@ function App() {
             gap: '12px',
           }}
         >
+          <button
+            onClick={() => {
+              setEditing(false);
+              setSelectedMemory(null);
+            }}
+            style={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              background: 'transparent',
+              border: 'none',
+              fontSize: '18px',
+              color: '#333',
+              cursor: 'pointer',
+            }}
+          >
+            ✕
+          </button>
+
           <h3 style={{ color: '#000' }}>Edit Memory</h3>
 
           <label style={{ color: '#000' }}>Date:</label>
