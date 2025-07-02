@@ -7,7 +7,7 @@ function NewMemoryForm({ onAdd }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [color, setColor] = useState('#ffffff'); 
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([null]);
 
   const handleImageChange = (index, file) => {
     if (!file) return;  //Prevents null uploads
@@ -170,7 +170,7 @@ function NewMemoryForm({ onAdd }) {
                 }}
                 aria-label="Remove image"
               >
-                ❌
+                ✕
               </button>
             )}
           </div>
