@@ -40,6 +40,12 @@ Mind Archive is a journaling web app built with Django and React. Users log mean
    python manage.py runserver
    ```
 
+5. Start the frontend development server:
+   ```bash
+   cd frontend
+   npm install
+   npm start
+
 ## 🛠 Tech Stack
 - **Backend:** Django + Django REST Framework  
   Uses `MultiPartParser`, `FormParser`, and `JSONParser` to support file uploads and PATCHing star positions
