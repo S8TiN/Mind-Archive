@@ -349,15 +349,24 @@ function App() {
             if (res.ok) {
               const updated = await res.json();
               toast.success("Memory updated");
+
+              // 🔁 Fetch fresh copy from backend (with all images)
+              const refreshed = await fetch(`http://127.0.0.1:8000/api/memories/${updated.id}/`)
+                .then(r => r.json());
+
               setMemories((prev) =>
-                prev.map((m) => (m.id === updated.id ? updated : m))
+                prev.map((m) => (m.id === updated.id ? refreshed : m))
               );
+              setSelectedMemory(refreshed); // ✅ Keep selected memory open, now with new images
               setEditing(false);
-              setSelectedMemory(null);
-            } else {
+            }
+            
+            else {
               toast.error("Failed to update memory.");
             }
+
           }}
+
           style={{
             position: 'fixed',
             bottom: '20px',
@@ -373,11 +382,14 @@ function App() {
             gap: '12px',
           }}
         >
+
           <button
             onClick={() => {
+              const fresh = memories.find(m => m.id === selectedMemory.id);
+              setSelectedMemory(fresh);
               setEditing(false);
-              setSelectedMemory(null);
             }}
+
             style={{
               position: 'absolute',
               top: '8px',

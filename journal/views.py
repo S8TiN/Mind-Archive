@@ -30,6 +30,19 @@ class MemoryEntryViewSet(viewsets.ModelViewSet):
         images = self.request.FILES.getlist('images')  # this expects form field name to be "images"
         for image in images:
             MemoryImage.objects.create(memory=memory, image=image)
+    
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+
+        # Save any newly uploaded image file(s)
+        memory = self.get_object()
+        new_images = request.FILES.getlist('image')  # field name from frontend
+
+        for image in new_images:
+            MemoryImage.objects.create(memory=memory, image=image)
+
+        return response
+
 
 @login_required
 def user_info(request):
