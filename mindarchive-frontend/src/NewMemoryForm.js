@@ -148,7 +148,8 @@ function NewMemoryForm({ onAdd }) {
               onChange={(e) => handleImageChange(index, e.target.files[0])}
               style={{
                 padding: '6px',
-                flexGrow: 1
+                flexGrow: 1,
+                color: theme === 'dark' ? '#8fdcff' : '#000'
               }}
             />
 
