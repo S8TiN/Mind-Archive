@@ -17,6 +17,7 @@ function App() {
   const [hoveredMemoryId, setHoveredMemoryId] = useState(null);
   const [user, setUser] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [infoExpanded, setInfoExpanded] = useState(false);
 
   const containerRefs = useRef({});
   const sectionIndexRef = useRef(null);
@@ -478,21 +479,39 @@ function App() {
         <div
           style={{
             position: 'fixed',
-            bottom: '20px',
-            right: '30px',
+            bottom: infoExpanded ? '50px' : '20px',
+            right: infoExpanded ? '50px' : '30px',
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
             padding: '24px',
             borderRadius: '16px',
             boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
-            width: '300px',
-            height: '350px',
+            width: infoExpanded ? '600px' : '300px',
+            height: infoExpanded ? '500px' : '350px',
             zIndex: 10,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            color: 'black'
+            color: 'black',
+            transition: 'all 0.3s ease-in-out'
           }}
         >
+          <div
+            onClick={() => setInfoExpanded(prev => !prev)}
+            style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              fontSize: '20px',
+              cursor: 'pointer',
+              color: '#444',
+              zIndex: 100
+            }}
+            title={infoExpanded ? "Collapse" : "Expand"}
+          >
+            ⛶
+          </div>
+
+
           <div>
             <h3 style={{ marginBottom: '8px', color: '#000' }}>{selectedMemory.title}</h3>
             <p><strong style={{ color: '#000' }}>Content:</strong> {selectedMemory.content}</p>
