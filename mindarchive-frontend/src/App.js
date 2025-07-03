@@ -486,7 +486,7 @@ function App() {
             borderRadius: '16px',
             boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
             width: infoExpanded ? '600px' : '300px',
-            height: infoExpanded ? '500px' : '350px',
+            height: infoExpanded ? '600px' : '350px',
             zIndex: 10,
             display: 'flex',
             flexDirection: 'column',
@@ -501,7 +501,7 @@ function App() {
               position: 'absolute',
               top: '10px',
               right: '10px',
-              fontSize: '20px',
+              fontSize: '30px',
               cursor: 'pointer',
               color: '#444',
               zIndex: 100
@@ -517,21 +517,30 @@ function App() {
             <p><strong style={{ color: '#000' }}>Content:</strong> {selectedMemory.content}</p>
 
             {selectedMemory.images && selectedMemory.images.length > 0 && (
-              <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '210px', overflowY: 'auto' }}>
+              <div style={{ 
+                marginTop: '12px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '8px', 
+                maxHeight: infoExpanded ? '400px' : '210px', 
+                overflowY: 'auto' 
+              }}>
                 {selectedMemory.images.map((img, i) => (
                   <img
                     key={i}
                     src={img.image}
                     alt={`Memory ${i + 1}`}
                     style={{
-                      maxWidth: '100%',
-                      borderRadius: '8px',
+                      width: '100%',
+                      maxHeight: infoExpanded ? '300px' : '150px',
                       objectFit: 'cover',
+                      borderRadius: '8px'
                     }}
                   />
                 ))}
               </div>
             )}
+
 
 
           </div>
