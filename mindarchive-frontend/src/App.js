@@ -532,8 +532,8 @@ function App() {
                     alt={`Memory ${i + 1}`}
                     style={{
                       width: '100%',
-                      maxHeight: infoExpanded ? '300px' : '150px',
-                      objectFit: 'cover',
+                      height: 'auto',
+                      objectFit: 'contain',
                       borderRadius: '8px'
                     }}
                   />
