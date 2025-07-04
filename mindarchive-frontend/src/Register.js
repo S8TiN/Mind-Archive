@@ -54,6 +54,7 @@ const Register = () => {
   };
 
   return (
+
     <div
       style={{
         backgroundImage:
@@ -67,6 +68,7 @@ const Register = () => {
         fontFamily: "'Segoe UI', sans-serif"
       }}
     >
+
       <div
         style={{
           background: "rgba(0, 0, 0, 0.75)",
@@ -78,6 +80,7 @@ const Register = () => {
           boxShadow: "0 4px 15px rgba(0,0,0,0.3)"
         }}
       >
+
         <h2 style={{ textAlign: "center", marginBottom: "1rem", fontSize: "28px" }}>Register</h2>
         <form onSubmit={handleSubmit}>
           <input
@@ -95,6 +98,7 @@ const Register = () => {
               border: "none"
             }}
           />
+
           <input
             type="password"
             placeholder="Password"
@@ -110,7 +114,9 @@ const Register = () => {
               border: "none"
             }}
           />
+
           <p style={{ marginBottom: "0.5rem" }}>Select an avatar:</p>
+
           <div
             style={{
               display: "flex",
@@ -120,6 +126,7 @@ const Register = () => {
               marginBottom: "1.25rem"
             }}
           >
+
             {avatars.map((avatar) => (
               <img
                 key={avatar}
@@ -143,6 +150,7 @@ const Register = () => {
               />
             ))}
           </div>
+
           <button
             type="submit"
             disabled={!username || !password || !selectedAvatar}
