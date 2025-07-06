@@ -1,6 +1,5 @@
 // src/App.js
-import { ToastContainer } from 'react-toastify';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import NewMemoryForm from './NewMemoryForm';
