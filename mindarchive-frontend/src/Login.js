@@ -116,17 +116,35 @@ function Login({ onLoginSuccess }) {
   };
 
   return (
+  <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+    <video
+      autoPlay
+      muted
+      loop
+      playsInline
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        zIndex: -1
+      }}
+    >
+      <source src="/star.mp4" type="video/mp4" />
+    </video>
+
     <div
       style={{
-        background: 'black',
         color: '#8fdcff',
-        height: '100vh',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         padding: '20px',
-        position: 'relative',
+        position: 'relative'
       }}
     >
 
@@ -217,6 +235,7 @@ function Login({ onLoginSuccess }) {
       </div>
 
     </div>
+  </div>
   );
 }
 
