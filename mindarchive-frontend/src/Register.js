@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -55,19 +55,37 @@ const Register = () => {
 
   return (
 
-    <div
-      style={{
-        backgroundImage:
-          'url("https://www.hdwallpapers.in/download/black_and_white_picture_of_stars_during_nighttime_4k_5k_hd_galaxy-3840x2160.jpg")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "'Segoe UI', sans-serif"
-      }}
-    >
+    <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1
+        }}
+      >
+        <source src="/register_wallpaper.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontFamily: "'Segoe UI', sans-serif",
+          position: 'relative'
+        }}
+      >
+
 
       <div
         style={{
@@ -179,7 +197,8 @@ const Register = () => {
           )}
         </form>
       </div>
-    </div>
+    </div> 
+  </div>   
   );
 };
 
