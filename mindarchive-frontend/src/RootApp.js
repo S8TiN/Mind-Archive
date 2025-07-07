@@ -4,6 +4,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Login from './Login';
 import Dashboard from './App';
 import Register from './Register';
+
 console.log("Register component is:", Register);
 
 function RequireAuth({ children }) {
