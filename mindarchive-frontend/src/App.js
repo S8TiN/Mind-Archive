@@ -163,6 +163,7 @@ function App() {
           border: theme === 'dark' ? '2px solid #8fdcff' : '2px solid #333'
         }}
       />
+
       {showMenu && (
         <div style={{
           position: 'absolute',
@@ -174,8 +175,12 @@ function App() {
           borderRadius: '8px',
           padding: '10px',
           zIndex: 100,
-          minWidth: '150px'
+          minWidth: '205px',
+          maxWidth: '220px',
+          whiteSpace: 'normal',
+          wordWrap: 'break-word'
         }}>
+          
           <div
             onClick={() => {
               toggleTheme();
