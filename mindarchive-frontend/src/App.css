@@ -66,3 +66,44 @@ input[type="file"]::file-selector-button {
 input[type="file"] {
   color: black;
 }
+
+.circle-star {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px 2px currentColor;
+  z-index: 2;
+  position: relative;
+}
+
+.twinkle-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-image:
+    radial-gradient(circle, currentColor 20%, transparent 60%),
+    linear-gradient(currentColor 0 0),
+    linear-gradient(90deg, currentColor 0 0);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%, 1px 100%, 100% 1px;
+  transform: translate(-50%, -50%);
+  opacity: 0.8;
+  animation: flareTwinkle 2.4s infinite ease-in-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes flareTwinkle {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(2.3);
+    opacity: 0;
+  }
+}

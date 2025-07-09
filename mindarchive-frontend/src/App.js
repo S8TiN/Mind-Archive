@@ -287,36 +287,40 @@ function App() {
                     position: 'absolute',
                     left: `${x}%`,
                     top: `${y}%`,
-                    width: '10px',
-                    height: '10px',
-                    borderRadius: '50%',
-                    backgroundColor: memory.color || '#ffffff',
-                    boxShadow: `0 0 8px 2px ${memory.color || '#8fdcff'}`,
-                    cursor: 'grab',
                     transform: 'translate(-50%, -50%)',
+                    cursor: 'grab',
                     zIndex: 1
                   }}
                 >
+                  <div
+                    className="circle-star"
+                    style={{ backgroundColor: memory.color || '#ffffff' }}
+                  ></div>
+
+                  <div
+                    className="twinkle-overlay"
+                    style={{ backgroundColor: memory.color || '#ffffff' }}
+                  ></div>
+
                   {hoveredMemoryId === memory.id && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '-32px',
-                        left: '10px',
-                        backgroundColor: theme === 'dark' ? '#111' : '#f1f1f1',
-                        color: theme === 'dark' ? '#8fdcff' : '#222',
-                        padding: '6px 10px',
-                        borderRadius: '8px',
-                        fontSize: '0.75rem',
-                        whiteSpace: 'nowrap',
-                        zIndex: 5
-                      }}
-                    >
+                    <div style={{
+                      position: 'absolute',
+                      top: '-32px',
+                      left: '10px',
+                      backgroundColor: theme === 'dark' ? '#111' : '#f1f1f1',
+                      color: theme === 'dark' ? '#8fdcff' : '#222',
+                      padding: '6px 10px',
+                      borderRadius: '8px',
+                      fontSize: '0.75rem',
+                      whiteSpace: 'nowrap',
+                      zIndex: 5
+                    }}>
                       {memory.title}
                     </div>
                   )}
                 </div>
               );
+
             })}
           </div>
         );
