@@ -139,7 +139,6 @@ function App() {
   return (
     <div
       style={{
-        background: theme === 'dark' ? '#000' : '#fff',
         color: theme === 'dark' ? '#8fdcff' : '#1a1a1a',
         overflowY: 'scroll',
         height: '100vh',
@@ -147,6 +146,25 @@ function App() {
         position: 'relative',
       }}
     >
+
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1
+        }}
+      >
+        <source src="/star.mp4" type="video/mp4" />
+      </video>
+
           {/* 🌐 Profile picture dropdown toggle */}
     <div 
       style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 1000 }}>
