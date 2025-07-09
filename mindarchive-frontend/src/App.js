@@ -320,11 +320,6 @@ function App() {
                     style={{ backgroundColor: memory.color || '#ffffff' }}
                   ></div>
 
-                  <div
-                    className="twinkle-overlay"
-                    style={{ backgroundColor: memory.color || '#ffffff' }}
-                  ></div>
-
                   {hoveredMemoryId === memory.id && (
                     <div style={{
                       position: 'absolute',
