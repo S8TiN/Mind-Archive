@@ -149,9 +149,19 @@ function Login({ onLoginSuccess }) {
     >
 
       <h1>Welcome to Mind Archive</h1>
-      <p className="intro-text">
+
+      <p
+        style={{
+          fontSize: '1.25rem',
+          lineHeight: '1.8',
+          textAlign: 'center',
+          maxWidth: '700px',
+          margin: '20px auto'
+        }}
+      >
         The web app that allows you to record life’s key moments and explore your memories in a visual, evolving space.
       </p>
+
 
       <p>Please sign in to continue</p>
 
