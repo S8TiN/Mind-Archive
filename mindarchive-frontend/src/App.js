@@ -9,6 +9,10 @@ import { ThemeContext } from './ThemeContext';
 
 function App() {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  useEffect(() => {
+    document.body.className = theme === 'dark' ? 'dark' : 'light';
+  }, [theme]);
+
   const [memories, setMemories] = useState([]);
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -147,23 +151,46 @@ function App() {
       }}
     >
 
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: -1
-        }}
-      >
-        <source src="/star.mp4" type="video/mp4" />
-      </video>
+      {theme === 'dark' && (
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: -1
+          }}
+        >
+          <source src="/star.mp4" type="video/mp4" />
+        </video>
+      )}
+
+      {theme === 'light' && (
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: -1
+          }}
+        >
+          <source src="/cloudwallpaper.mp4" type="video/mp4" />
+        </video>
+      )}
+
 
           {/* 🌐 Profile picture dropdown toggle */}
     <div 
