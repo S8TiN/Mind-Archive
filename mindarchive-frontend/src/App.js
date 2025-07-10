@@ -25,6 +25,10 @@ function App() {
   const containerRefs = useRef({});
   const sectionIndexRef = useRef(null);
 
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [region, setRegion] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+
+
   const fetchUser = async () => {
     try {
       const res = await fetch("http://localhost:8000/api/user/", {
@@ -45,6 +49,13 @@ function App() {
     fetchUser();
   }, []);
 
+  useEffect(() => {
+      const interval = setInterval(() => {
+        setCurrentTime(new Date());
+      }, 1000);
+      return () => clearInterval(interval);
+    }, []);
+    
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/memories/')
       .then(res => res.json())
@@ -193,8 +204,12 @@ function App() {
 
 
           {/* 🌐 Profile picture dropdown toggle */}
-    <div 
-      style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 1000 }}>
+    <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', alignItems: 'center', gap: '12px', zIndex: 1000 }}>
+      <div style={{ color: theme === 'dark' ? '#8fdcff' : '#333', fontWeight: 'bold', fontSize: '14px', textAlign: 'right' }}>
+        {currentTime.toLocaleString('en-US', { timeZone: region, hour: '2-digit', minute: '2-digit', second: '2-digit' })}<br/>
+        {currentTime.toLocaleDateString('en-US', { timeZone: region })}
+      </div>
+
       <img
         src={user?.picture || "/avatars/avatar1.jpg"}
         alt="Profile"
@@ -231,6 +246,7 @@ function App() {
               toggleTheme();
               setShowMenu(false);
             }}
+            
             style={{
               padding: '8px',
               cursor: 'pointer',
@@ -243,6 +259,38 @@ function App() {
           >
             🌗 Toggle Dark Mode
           </div>
+
+          <div
+            style={{
+              padding: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              flexDirection: 'column'
+            }}
+          >
+            🌍 Change Region
+            <select
+              value={region}
+              onChange={(e) => {
+                setRegion(e.target.value);
+                localStorage.setItem("timezoneRegion", e.target.value);
+              }}
+              style={{
+                padding: '4px 8px',
+                fontSize: '14px',
+                width: '100%',
+                marginTop: '4px'
+              }}
+            >
+              <option value="America/Los_Angeles">Pacific (US)</option>
+              <option value="America/New_York">Eastern (US)</option>
+              <option value="Europe/London">London</option>
+              <option value="Asia/Tokyo">Tokyo</option>
+              <option value="Australia/Sydney">Sydney</option>
+            </select>
+          </div>
+
           <div
             onClick={() => {
               localStorage.removeItem("authToken");
