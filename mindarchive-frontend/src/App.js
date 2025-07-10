@@ -55,7 +55,7 @@ function App() {
       }, 1000);
       return () => clearInterval(interval);
     }, []);
-    
+
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/memories/')
       .then(res => res.json())
@@ -263,13 +263,18 @@ function App() {
           <div
             style={{
               padding: '8px',
+              cursor: 'default',
               display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              flexDirection: 'column'
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              width: '150px',
+              whiteSpace: 'nowrap',
+              gap: '6px',
             }}
           >
-            🌍 Change Region
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              🌍 <span>Change Region</span>
+            </div>
             <select
               value={region}
               onChange={(e) => {
@@ -280,7 +285,6 @@ function App() {
                 padding: '4px 8px',
                 fontSize: '14px',
                 width: '100%',
-                marginTop: '4px'
               }}
             >
               <option value="America/Los_Angeles">Pacific (US)</option>
@@ -290,6 +294,7 @@ function App() {
               <option value="Australia/Sydney">Sydney</option>
             </select>
           </div>
+
 
           <div
             onClick={() => {
