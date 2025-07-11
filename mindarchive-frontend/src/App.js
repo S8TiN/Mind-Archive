@@ -205,9 +205,18 @@ function App() {
 
           {/* 🌐 Profile picture dropdown toggle */}
     <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', alignItems: 'center', gap: '12px', zIndex: 1000 }}>
-      <div style={{ color: theme === 'dark' ? '#8fdcff' : '#333', fontWeight: 'bold', fontSize: '14px', textAlign: 'right' }}>
-        {currentTime.toLocaleString('en-US', { timeZone: region, hour: '2-digit', minute: '2-digit', second: '2-digit' })}<br/>
-        {currentTime.toLocaleDateString('en-US', { timeZone: region })}
+      <div style={{ 
+        color: theme === 'dark' ? '#8fdcff' : '#333', 
+        fontWeight: 'bold', 
+        fontSize: '14px', 
+        textAlign: 'right',
+        display: 'flex', 
+        flexDirection: 'row', 
+        gap: '8px', 
+        alignItems: 'center' 
+      }}>
+        <span>{currentTime.toLocaleDateString('en-US', { timeZone: region })}</span>
+        <span>{currentTime.toLocaleTimeString('en-US', { timeZone: region })}</span>
       </div>
 
       <img
