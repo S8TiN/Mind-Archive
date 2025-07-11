@@ -208,15 +208,21 @@ function App() {
       <div style={{ 
         color: theme === 'dark' ? '#8fdcff' : '#333', 
         fontWeight: 'bold', 
-        fontSize: '14px', 
+        fontSize: '20px', 
         textAlign: 'right',
         display: 'flex', 
         flexDirection: 'row', 
         gap: '8px', 
         alignItems: 'center' 
       }}>
-        <span>{currentTime.toLocaleDateString('en-US', { timeZone: region })}</span>
-        <span>{currentTime.toLocaleTimeString('en-US', { timeZone: region })}</span>
+
+        <span style={{ marginRight: '8px' }}>
+          {currentTime.toLocaleDateString('en-US', { timeZone: region })}
+        </span>
+        <span>
+          {currentTime.toLocaleTimeString('en-US', { timeZone: region })}
+        </span>
+
       </div>
 
       <img
