@@ -276,39 +276,23 @@ function App() {
           </div>
 
           <div
+            onClick={() => {
+              setShowMenu(false);
+              window.location.href = '/change-region';
+            }}
             style={{
               padding: '8px',
-              cursor: 'default',
+              cursor: 'pointer',
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
+              alignItems: 'center',
               width: '150px',
               whiteSpace: 'nowrap',
-              gap: '6px',
+              gap: '8px',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              🌍 <span>Change Region</span>
-            </div>
-            <select
-              value={region}
-              onChange={(e) => {
-                setRegion(e.target.value);
-                localStorage.setItem("timezoneRegion", e.target.value);
-              }}
-              style={{
-                padding: '4px 8px',
-                fontSize: '14px',
-                width: '100%',
-              }}
-            >
-              <option value="America/Los_Angeles">Pacific (US)</option>
-              <option value="America/New_York">Eastern (US)</option>
-              <option value="Europe/London">London</option>
-              <option value="Asia/Tokyo">Tokyo</option>
-              <option value="Australia/Sydney">Sydney</option>
-            </select>
+            🌍 Change Region
           </div>
+
 
 
           <div
