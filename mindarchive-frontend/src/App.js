@@ -6,6 +6,7 @@ import NewMemoryForm from './NewMemoryForm';
 import Login from './Login';
 import './App.css';
 import { ThemeContext } from './ThemeContext';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -24,6 +25,8 @@ function App() {
 
   const containerRefs = useRef({});
   const sectionIndexRef = useRef(null);
+
+  const navigate = useNavigate();
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [region, setRegion] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
@@ -278,7 +281,7 @@ function App() {
           <div
             onClick={() => {
               setShowMenu(false);
-              window.location.href = '/change-region';
+              navigate('/region');  // ⬅️ now using React Router
             }}
             style={{
               padding: '8px',
@@ -292,7 +295,6 @@ function App() {
           >
             🌍 Change Region
           </div>
-
 
 
           <div

@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Login from './Login';
 import Dashboard from './App';
+import RegionSelector from './RegionSelector';
 import Register from './Register';
 
 console.log("Register component is:", Register);
@@ -28,6 +29,14 @@ function RootApp() {
         element={
           <RequireAuth>
             <Dashboard />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/region"
+        element={
+          <RequireAuth>
+            <RegionSelector />
           </RequireAuth>
         }
       />
