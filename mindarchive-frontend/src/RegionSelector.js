@@ -26,6 +26,8 @@ export default function RegionSelector()
     navigate('/dashboard'); // go back to main page
   };
 
+  const timezones = Intl.supportedValuesOf('timeZone');
+
   return (
     <div style={{ padding: '2rem', color: theme === 'dark' ? '#8fdcff' : '#1a1a1a' }}>
       <h2>Select your region</h2>
@@ -35,17 +37,13 @@ export default function RegionSelector()
         onChange={e => setRegion(e.target.value)}
         style={{ padding: '0.5rem', fontSize: '1rem', marginTop: '1rem' }}
       >
-
-        <option value="America/Los_Angeles">Pacific (US)</option>
-        <option value="America/Denver">Mountain (US)</option>
-        <option value="America/Chicago">Central (US)</option>
-        <option value="America/New_York">Eastern (US)</option>
-        <option value="Europe/London">London</option>
-        <option value="Europe/Berlin">Berlin</option>
-        <option value="Asia/Tokyo">Tokyo</option>
-        <option value="Australia/Sydney">Sydney</option>
-
+        {timezones.map((tz, index) => (
+          <option key={index} value={tz}>
+            {tz.replace(/_/g, ' ')}
+          </option>
+        ))}
       </select>
+
 
       <p style={{ marginTop: '1.5rem' }}>
         Current time in <strong>{region}</strong>:
