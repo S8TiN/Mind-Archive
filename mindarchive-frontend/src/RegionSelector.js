@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { ThemeContext } from './ThemeContext'; // make sure this path is correct
 
-export default function RegionSelector() {
+export default function RegionSelector() 
+{
   const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
+
   const [region, setRegion] = useState(
     localStorage.getItem('timezoneRegion') ||
     Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -21,7 +23,7 @@ export default function RegionSelector() {
 
   const saveRegion = () => {
     localStorage.setItem('timezoneRegion', region);
-    navigate('/dashboard');                // go back to main page
+    navigate('/dashboard'); // go back to main page
   };
 
   return (
@@ -33,6 +35,7 @@ export default function RegionSelector() {
         onChange={e => setRegion(e.target.value)}
         style={{ padding: '0.5rem', fontSize: '1rem', marginTop: '1rem' }}
       >
+
         <option value="America/Los_Angeles">Pacific (US)</option>
         <option value="America/Denver">Mountain (US)</option>
         <option value="America/Chicago">Central (US)</option>
@@ -41,6 +44,7 @@ export default function RegionSelector() {
         <option value="Europe/Berlin">Berlin</option>
         <option value="Asia/Tokyo">Tokyo</option>
         <option value="Australia/Sydney">Sydney</option>
+
       </select>
 
       <p style={{ marginTop: '1.5rem' }}>
@@ -61,6 +65,9 @@ export default function RegionSelector() {
       <button onClick={saveRegion} style={{ padding: '0.5rem 1rem' }}>
         Save & Return
       </button>
+
     </div>
+
   );
+
 }
