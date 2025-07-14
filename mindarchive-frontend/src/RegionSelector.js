@@ -1,9 +1,12 @@
 // src/RegionSelector.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { ThemeContext } from './ThemeContext'; // make sure this path is correct
 
 export default function RegionSelector() {
   const navigate = useNavigate();
+  const { theme } = useContext(ThemeContext);
   const [region, setRegion] = useState(
     localStorage.getItem('timezoneRegion') ||
     Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -22,7 +25,7 @@ export default function RegionSelector() {
   };
 
   return (
-    <div style={{ padding: '2rem', color: '#8fdcff' }}>
+    <div style={{ padding: '2rem', color: theme === 'dark' ? '#8fdcff' : '#1a1a1a' }}>
       <h2>Select your region</h2>
 
       <select
