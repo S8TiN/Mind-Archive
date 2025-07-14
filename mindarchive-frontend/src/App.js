@@ -29,8 +29,17 @@ function App() {
   const navigate = useNavigate();
 
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [region, setRegion] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [region, setRegion] = useState(
+    localStorage.getItem('timezoneRegion') ||
+    Intl.DateTimeFormat().resolvedOptions().timeZone
+  );
 
+  useEffect(() => {
+  const savedRegion = localStorage.getItem('timezoneRegion');
+  if (savedRegion) {
+    setRegion(savedRegion);
+  }
+}, []);
 
   const fetchUser = async () => {
     try {

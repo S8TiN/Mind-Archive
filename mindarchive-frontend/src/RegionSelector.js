@@ -30,7 +30,7 @@ export default function RegionSelector()
 
   return (
     <div style={{ padding: '2rem', color: theme === 'dark' ? '#8fdcff' : '#1a1a1a' }}>
-      <h2>Select your region</h2>
+      <h2>Select your region: </h2>
 
       <select
         value={region}
