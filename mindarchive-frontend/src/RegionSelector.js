@@ -1,13 +1,10 @@
 // src/RegionSelector.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { ThemeContext } from './ThemeContext'; // make sure this path is correct
 
 export default function RegionSelector() 
 {
   const navigate = useNavigate();
-  const { theme } = useContext(ThemeContext);
 
   const [region, setRegion] = useState(
     localStorage.getItem('timezoneRegion') ||
