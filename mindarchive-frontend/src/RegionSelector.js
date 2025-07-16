@@ -50,7 +50,7 @@ export default function RegionSelector()
 
       <div style={{
         padding: '2rem',
-        color: theme === 'dark' ? '#8fdcff' : '#1a1a1a',
+        color: '#8fdcff',
         position: 'relative',
         zIndex: 1
       }}>
@@ -94,6 +94,6 @@ export default function RegionSelector()
     </>
 
   );
-  
+
 }
 
