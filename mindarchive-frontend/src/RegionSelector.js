@@ -29,7 +29,32 @@ export default function RegionSelector()
   const timezones = Intl.supportedValuesOf('timeZone');
 
   return (
-    <div style={{ padding: '2rem', color: theme === 'dark' ? '#8fdcff' : '#1a1a1a' }}>
+    <>
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1
+        }}
+      >
+        <source src="/regionwallpaper.mp4" type="video/mp4" />
+      </video>
+
+      <div style={{
+        padding: '2rem',
+        color: theme === 'dark' ? '#8fdcff' : '#1a1a1a',
+        position: 'relative',
+        zIndex: 1
+      }}>
+
       <h2>Select your region: </h2>
 
       <select
@@ -64,8 +89,11 @@ export default function RegionSelector()
         Save & Return
       </button>
 
-    </div>
+      </div>
+      
+    </>
 
   );
-
+  
 }
+
