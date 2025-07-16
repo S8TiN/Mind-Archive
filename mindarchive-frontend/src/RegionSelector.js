@@ -68,7 +68,7 @@ export default function RegionSelector()
 
 
       <p style={{ marginTop: '1.5rem' }}>
-        Current time in <strong>{region}</strong>:
+        Current date/time in <strong>{region}</strong>:
         <br />
         {now.toLocaleString('en-US', {
           timeZone: region,
