@@ -123,7 +123,7 @@ export default function RegionSelector()
       <select
         value={region}
         onChange={e => setRegion(e.target.value)}
-        style={{ padding: '0.5rem', fontSize: '1rem', marginTop: '1rem', width: '100%' }}
+        style={{ padding: '0.5rem', fontSize: '1rem', marginTop: '1rem', width: '60%' }}
       >
         {timeZoneOptions.map((tz, index) => (
           <option key={index} value={tz.value}>
