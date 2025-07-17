@@ -25,6 +25,8 @@ export default function RegionSelector()
 
   const timezones = Intl.supportedValuesOf('timeZone');
 
+  const suggestedZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   return (
     <>
       <video
@@ -59,12 +61,19 @@ export default function RegionSelector()
         onChange={e => setRegion(e.target.value)}
         style={{ padding: '0.5rem', fontSize: '1rem', marginTop: '1rem' }}
       >
-        {timezones.map((tz, index) => (
-          <option key={index} value={tz}>
-            {tz.replace(/_/g, ' ')}
-          </option>
+        <option value={suggestedZone}>
+          (Suggested) {suggestedZone.replace(/_/g, ' ')}
+        </option>
+
+        {timezones
+          .filter(tz => tz !== suggestedZone)
+          .map((tz, index) => (
+            <option key={index} value={tz}>
+              {tz.replace(/_/g, ' ')}
+            </option>
         ))}
       </select>
+
 
 
       <p style={{ marginTop: '1.5rem' }}>
