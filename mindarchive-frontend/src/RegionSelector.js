@@ -23,9 +23,73 @@ export default function RegionSelector()
     navigate('/dashboard'); // go back to main page
   };
 
-  const timezones = Intl.supportedValuesOf('timeZone');
+  const timeZoneOptions = [
+    {
+      label: 'Pacific Standard Time',
+      abbr: 'PST',
+      city: 'Los Angeles',
+      value: 'America/Los_Angeles',
+    },
+    {
+      label: 'Mountain Standard Time',
+      abbr: 'MST',
+      city: 'Denver',
+      value: 'America/Denver',
+    },
+    {
+      label: 'Central Standard Time',
+      abbr: 'CST',
+      city: 'Chicago',
+      value: 'America/Chicago',
+    },
+    {
+      label: 'Eastern Standard Time',
+      abbr: 'EST',
+      city: 'New York',
+      value: 'America/New_York',
+    },
+    {
+      label: 'Greenwich Mean Time',
+      abbr: 'GMT',
+      city: 'London',
+      value: 'Etc/GMT',
+    },
+    {
+      label: 'Central European Time',
+      abbr: 'CET',
+      city: 'Paris',
+      value: 'Europe/Paris',
+    },
+    {
+      label: 'India Standard Time',
+      abbr: 'IST',
+      city: 'New Delhi',
+      value: 'Asia/Kolkata',
+    },
+    {
+      label: 'Japan Standard Time',
+      abbr: 'JST',
+      city: 'Tokyo',
+      value: 'Asia/Tokyo',
+    },
+    {
+      label: 'Australian Eastern Time',
+      abbr: 'AEST',
+      city: 'Sydney',
+      value: 'Australia/Sydney',
+    },
+  ];
 
-  const suggestedZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  
+  const getTimeInZone = (zone) => {
+    return new Date().toLocaleTimeString('en-US', {
+      timeZone: zone,
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const selectedLabel = timeZoneOptions.find(tz => tz.value === region)?.label || region;
 
   return (
     <>
@@ -59,25 +123,17 @@ export default function RegionSelector()
       <select
         value={region}
         onChange={e => setRegion(e.target.value)}
-        style={{ padding: '0.5rem', fontSize: '1rem', marginTop: '1rem' }}
+        style={{ padding: '0.5rem', fontSize: '1rem', marginTop: '1rem', width: '100%' }}
       >
-        <option value={suggestedZone}>
-          (Suggested) {suggestedZone.replace(/_/g, ' ')}
-        </option>
-
-        {timezones
-          .filter(tz => tz !== suggestedZone)
-          .map((tz, index) => (
-            <option key={index} value={tz}>
-              {tz.replace(/_/g, ' ')}
-            </option>
+        {timeZoneOptions.map((tz, index) => (
+          <option key={index} value={tz.value}>
+            {tz.label} ({tz.abbr}) – {tz.city} – {getTimeInZone(tz.value)}
+          </option>
         ))}
       </select>
 
-
-
       <p style={{ marginTop: '1.5rem' }}>
-        Current date/time in <strong>{region}</strong>:
+        Current time/date in <strong>{selectedLabel}</strong>:
         <br />
         {now.toLocaleString('en-US', {
           timeZone: region,
