@@ -89,8 +89,6 @@ export default function RegionSelector()
     });
   };
 
-  const selectedLabel = timeZoneOptions.find(tz => tz.value === region)?.label || region;
-
   return (
     <>
       <video
@@ -133,7 +131,7 @@ export default function RegionSelector()
       </select>
 
       <p style={{ marginTop: '1.5rem' }}>
-        Current time/date in <strong>{selectedLabel}</strong>:
+        <strong>Selected time/date:</strong>
         <br />
         {now.toLocaleString('en-US', {
           timeZone: region,
