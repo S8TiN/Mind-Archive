@@ -615,8 +615,8 @@ function App() {
             onClick={() => setInfoExpanded(prev => !prev)}
             style={{
               position: 'absolute',
-              top: '10px',
-              right: '10px',
+              top: '0px',
+              left: '10px',
               fontSize: '30px',
               cursor: 'pointer',
               color: '#444',
