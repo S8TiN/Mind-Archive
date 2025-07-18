@@ -673,14 +673,9 @@ function App() {
                 ))}
               </div>
             )}
-
-
-
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '8px' }}>
-            <button style={{ backgroundColor: '#007bff', color: 'white', padding: '6px 12px' }} onClick={() => setEditing(true)}>Edit</button>
-            <button style={{ backgroundColor: '#ff4d4d', color: 'white', padding: '6px 12px' }} onClick={() => handleDelete(selectedMemory.id)}>Delete</button>
             <button
               style={{
                 backgroundColor: selectedMemory.is_favorite ? '#ffc107' : '#ccc',
@@ -712,6 +707,11 @@ function App() {
             >
               {selectedMemory.is_favorite ? 'Unpin ⭐' : 'Pin ⭐'}
             </button>
+
+            <button style={{ backgroundColor: '#007bff', color: 'white', padding: '6px 12px' }} onClick={() => setEditing(true)}>Edit</button>
+
+            <button style={{ backgroundColor: '#ff4d4d', color: 'white', padding: '6px 12px' }} onClick={() => handleDelete(selectedMemory.id)}>Delete</button>
+            
           </div>
 
 
