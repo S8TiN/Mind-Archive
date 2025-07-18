@@ -421,11 +421,16 @@ function App() {
                       borderRadius: '8px',
                       fontSize: '0.75rem',
                       whiteSpace: 'nowrap',
-                      zIndex: 5
+                      zIndex: 5,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
                     }}>
                       {memory.title}
+                      {memory.is_favorite && <span style={{ fontSize: '1rem', color: '#ffc107' }}>⭐</span>}
                     </div>
                   )}
+
                 </div>
               );
 
@@ -655,11 +660,45 @@ function App() {
 
 
           </div>
+
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '8px' }}>
             <button style={{ padding: '6px 12px' }} onClick={() => setSelectedMemory(null)}>Close</button>
             <button style={{ backgroundColor: '#007bff', color: 'white', padding: '6px 12px' }} onClick={() => setEditing(true)}>Edit</button>
             <button style={{ backgroundColor: '#ff4d4d', color: 'white', padding: '6px 12px' }} onClick={() => handleDelete(selectedMemory.id)}>Delete</button>
+            <button
+              style={{
+                backgroundColor: selectedMemory.is_favorite ? '#ffc107' : '#ccc',
+                color: 'black',
+                padding: '6px 12px'
+              }}
+              onClick={async () => {
+                const updated = {
+                  ...selectedMemory,
+                  is_favorite: !selectedMemory.is_favorite
+                };
+
+                const res = await fetch(`http://127.0.0.1:8000/api/memories/${selectedMemory.id}/`, {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ is_favorite: updated.is_favorite }),
+                });
+
+                if (res.ok) {
+                  toast.success(updated.is_favorite ? "Pinned to favorites ⭐" : "Unpinned from favorites");
+                  setSelectedMemory(updated);
+                  setMemories(prev =>
+                    prev.map(m => m.id === updated.id ? { ...m, is_favorite: updated.is_favorite } : m)
+                  );
+                } else {
+                  toast.error("Failed to update favorite status");
+                }
+              }}
+            >
+              {selectedMemory.is_favorite ? 'Unpin ⭐' : 'Pin ⭐'}
+            </button>
           </div>
+
+
         </div>
       )}
 
