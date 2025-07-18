@@ -627,6 +627,23 @@ function App() {
             ⛶
           </div>
 
+          <div
+            onClick={() => setSelectedMemory(null)}
+            style={{
+              position: 'absolute',
+              top: '4px',
+              right: '10px',
+              fontSize: '24px',
+              cursor: 'pointer',
+              color: '#444',
+              zIndex: 100
+            }}
+            title="Close"
+          >
+            ✕
+          </div>
+
+
 
           <div>
             <h3 style={{ marginBottom: '8px', color: '#000' }}>{selectedMemory.title}</h3>
