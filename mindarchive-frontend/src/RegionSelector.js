@@ -113,8 +113,10 @@ export default function RegionSelector()
         padding: '2rem',
         color: '#8fdcff',
         position: 'relative',
-        zIndex: 1
+        zIndex: 1,
+        maxWidth: '925px',
       }}>
+
 
       <h2>Select your region: </h2>
 
