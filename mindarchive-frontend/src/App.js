@@ -405,8 +405,9 @@ function App() {
                     zIndex: 1
                   }}
                 >
+
                   <div
-                    className="circle-star"
+                    className={`circle-star ${memory.is_favorite ? 'sparkle-star' : ''}`}
                     style={{ backgroundColor: memory.color || '#ffffff' }}
                   ></div>
 
