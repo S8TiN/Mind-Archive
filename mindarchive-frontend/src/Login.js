@@ -227,18 +227,12 @@ function Login({ onLoginSuccess }) {
           Log In
         </button>
 
-        <p
-          style={{
-            marginTop: '1rem',
-            color: '#8fdcff',
-            textDecoration: 'underline',
-            cursor: 'pointer'
-          }}
-          onClick={() => navigate('/forgot-password')}
-        >
-          Forgot password?
+        <p>
+          Forgot password?{' '}
+          <a href="/forgot-password" style={{ color: '#8fdcff' }}>
+            Reset here
+          </a>
         </p>
-
 
       </form>
 
