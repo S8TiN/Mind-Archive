@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import home, MemoryEntryViewSet, MemoryImageDeleteView, user_info, get_csrf_token, google_login, register_user
+from .views import home, MemoryEntryViewSet, MemoryImageDeleteView, user_info, get_csrf_token, google_login, register_user, send_password_reset_email
 
 router = DefaultRouter()
 router.register(r'api/memories', MemoryEntryViewSet, basename='memory')
@@ -13,4 +13,5 @@ urlpatterns = [
     path('api/google-login/', google_login),
     path('api/register/', register_user, name='register_user'),
     path('api/images/<int:pk>/', MemoryImageDeleteView.as_view(), name='delete-memory-image'),
+    path('api/password-reset/', send_password_reset_email, name='password-reset'),
 ]

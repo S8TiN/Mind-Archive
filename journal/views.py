@@ -14,6 +14,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
 
 load_dotenv()
 
@@ -141,3 +143,25 @@ class MemoryImageDeleteView(generics.DestroyAPIView):
     queryset = MemoryImage.objects.all()
     serializer_class = MemoryImageSerializer
 
+@csrf_exempt
+def send_password_reset_email(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            # Generate a fake token and link (replace with real logic later)
+            token = get_random_string(length=32)
+            reset_link = f"http://localhost:3000/reset-password/{token}"
+
+            send_mail(
+                'Password Reset Request',
+                f'Click the link to reset your password: {reset_link}',
+                'noreply@mindarchive.com',
+                [email],
+                fail_silently=False,
+            )
+            return JsonResponse({'message': 'Password reset email sent.'}, status=200)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found.'}, status=404)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
