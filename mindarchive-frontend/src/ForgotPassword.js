@@ -1,0 +1,82 @@
+// src/ForgotPassword.js
+import React, { useState } from 'react';
+
+export default function ForgotPassword() {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:8000/api/password-reset/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        alert('Failed to send reset email.');
+      }
+    } catch (err) {
+      console.error('Error sending password reset:', err);
+      alert('Something went wrong.');
+    }
+  };
+
+  return (
+    <div style={{
+      color: '#8fdcff',
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      background: 'black',
+      textAlign: 'center',
+      padding: '20px'
+    }}>
+      <h2>Reset Your Password</h2>
+
+      {submitted ? (
+        <p>We’ve sent you an email with instructions to reset your password.</p>
+      ) : (
+        <form onSubmit={handleSubmit} style={{ maxWidth: '400px', width: '100%' }}>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{
+              padding: '10px',
+              width: '100%',
+              marginBottom: '1rem',
+              borderRadius: '8px',
+              border: '1px solid #8fdcff',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              color: '#8fdcff',
+              outline: 'none'
+            }}
+          />
+          <button
+            type="submit"
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#8fdcff',
+              color: '#000',
+              border: 'none',
+              borderRadius: '6px',
+              fontWeight: 'bold',
+              cursor: 'pointer'
+            }}
+          >
+            Send Reset Link
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}

@@ -144,24 +144,37 @@ class MemoryImageDeleteView(generics.DestroyAPIView):
     serializer_class = MemoryImageSerializer
 
 @csrf_exempt
-def send_password_reset_email(request):
-    if request.method == 'POST':
+@require_POST
+def password_reset_request(request):
+    try:
         data = json.loads(request.body)
-        email = data.get('email')
-        try:
-            user = User.objects.get(email=email)
-            # Generate a fake token and link (replace with real logic later)
-            token = get_random_string(length=32)
-            reset_link = f"http://localhost:3000/reset-password/{token}"
+        email = data.get("email")
 
-            send_mail(
-                'Password Reset Request',
-                f'Click the link to reset your password: {reset_link}',
-                'noreply@mindarchive.com',
-                [email],
-                fail_silently=False,
-            )
-            return JsonResponse({'message': 'Password reset email sent.'}, status=200)
-        except User.DoesNotExist:
-            return JsonResponse({'error': 'User not found.'}, status=404)
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+        if not email:
+            return JsonResponse({"error": "Email is required."}, status=400)
+
+        user = User.objects.filter(email=email).first()
+        if not user:
+            return JsonResponse({"error": "No user found with this email."}, status=404)
+
+        # You can generate a token or code — for now we'll just simulate
+        reset_token = get_random_string(32)
+
+        # In real usage, you'd save this token and use it in a password reset link
+        print(f"Reset token for {email}: {reset_token}")  # Or log/store securely
+
+        # Send a basic reset email
+        send_mail(
+            subject='Your Password Reset Link',
+            message=f"Hi {user.username},\n\nTo reset your password, use this token: {reset_token}",
+            from_email='noreply@mindarchive.com',
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        return JsonResponse({"message": "Password reset email sent."})
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"error": str(e)}, status=500)
