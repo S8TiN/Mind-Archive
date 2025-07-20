@@ -5,6 +5,7 @@ import Login from './Login';
 import Dashboard from './App';
 import RegionSelector from './RegionSelector';
 import Register from './Register';
+import ForgotPassword from './ForgotPassword';
 
 console.log("Register component is:", Register);
 
@@ -24,6 +25,7 @@ function RootApp() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route
         path="/dashboard"
         element={

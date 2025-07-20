@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from './ThemeContext';
+import { Link } from 'react-router-dom';
 
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
@@ -213,7 +214,7 @@ function Login({ onLoginSuccess }) {
         <button
           type="submit"
           style={{
-            width: '175px',          // Match input width
+            width: '175px',
             padding: '10px 0',
             backgroundColor: '#fff',
             color: '#000',
@@ -225,6 +226,19 @@ function Login({ onLoginSuccess }) {
         >
           Log In
         </button>
+
+        <p
+          style={{
+            marginTop: '1rem',
+            color: '#8fdcff',
+            textDecoration: 'underline',
+            cursor: 'pointer'
+          }}
+          onClick={() => navigate('/forgot-password')}
+        >
+          Forgot password?
+        </p>
+
 
       </form>
 
