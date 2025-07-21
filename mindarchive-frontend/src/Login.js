@@ -1,8 +1,6 @@
 // src/Login.js
-import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ThemeContext } from './ThemeContext';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
@@ -52,21 +50,10 @@ function Login({ onLoginSuccess }) {
       });
 
       const data = await res.json();
-      if (res.ok) {
-        console.log('Google login success:', data);
-        if (data.token && data.user) {
-          localStorage.setItem("authToken", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
-
-          if (onLoginSuccess) {
-            onLoginSuccess();
-          } else {
-            navigate('/dashboard');
-          }
-        } else {
-          alert("Login failed: Missing user data");
-        }
-
+      if (res.ok && data.token && data.user) {
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        onLoginSuccess ? onLoginSuccess() : navigate('/dashboard');
       } else {
         alert('Google login failed: ' + (data.error || ''));
       }
@@ -117,144 +104,144 @@ function Login({ onLoginSuccess }) {
   };
 
   return (
-  <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
-    <video
-      autoPlay
-      muted
-      loop
-      playsInline
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        zIndex: -1
-      }}
-    >
-      <source src="/star.mp4" type="video/mp4" />
-    </video>
-
-    <div
-      style={{
-        color: '#8fdcff',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px',
-        position: 'relative'
-      }}
-    >
-
-      <h1>Welcome to Mind Archive</h1>
-
-      <p
+    <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
         style={{
-          fontSize: '1.25rem',
-          lineHeight: '1.8',
-          textAlign: 'center',
-          maxWidth: '700px',
-          margin: '20px auto'
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1,
         }}
       >
-        The web app that allows you to record life’s key moments and explore your memories in a visual, evolving space.
-      </p>
+        <source src="/star.mp4" type="video/mp4" />
+      </video>
 
+      <div
+        style={{
+          color: '#8fdcff',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '20px',
+          position: 'relative',
+        }}
+      >
+        <h1>Welcome to Mind Archive</h1>
 
-      <p>Please sign in to continue</p>
-
-      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          required
-          onChange={(e) => setUsername(e.target.value)}
+        <p
           style={{
-            marginBottom: '12px',
-            padding: '12px',
-            width: '150px',
-            borderRadius: '12px',
-            border: '1px solid #8fdcff',
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            color: '#8fdcff',
-            fontSize: '16px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-            backdropFilter: 'blur(6px)',
-            outline: 'none',
-            transition: '0.3s ease'
-          }}
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          required
-          onChange={(e) => setPassword(e.target.value)}
-          style={{
-            marginBottom: '20px',
-            padding: '12px',
-            width: '150px',
-            borderRadius: '12px',
-            border: '1px solid #8fdcff',
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            color: '#8fdcff',
-            fontSize: '16px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-            backdropFilter: 'blur(6px)',
-            outline: 'none',
-            transition: '0.3s ease'
-          }}
-        />
-
-        <button
-          type="submit"
-          style={{
-            width: '175px',
-            padding: '10px 0',
-            backgroundColor: '#fff',
-            color: '#000',
-            border: 'none',
-            borderRadius: '6px',
-            fontWeight: 'bold',
-            cursor: 'pointer'
+            fontSize: '1.25rem',
+            lineHeight: '1.8',
+            textAlign: 'center',
+            maxWidth: '700px',
+            margin: '20px auto',
           }}
         >
-          Log In
-        </button>
-
-        <p>
-          Forgot password?{' '}
-          <a href="/forgot-password" style={{ color: '#8fdcff' }}>
-            Reset here
-          </a>
+          The web app that allows you to record life’s key moments and explore your memories in a
+          visual, evolving space.
         </p>
 
-      </form>
+        <p>Please sign in to continue</p>
 
-      <div id="g-signin" style={{ marginTop: '20px', marginBottom: '20px' }}></div>
+        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            required
+            onChange={(e) => setUsername(e.target.value)}
+            style={{
+              marginBottom: '12px',
+              padding: '12px',
+              width: '150px',
+              borderRadius: '12px',
+              border: '1px solid #8fdcff',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              color: '#8fdcff',
+              fontSize: '16px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              backdropFilter: 'blur(6px)',
+              outline: 'none',
+              transition: '0.3s ease',
+            }}
+          />
 
-      <div style={{ marginTop: '1rem' }}>
-        <span>Don't have an account? </span>
-        <span
-          onClick={() => navigate("/register")}
-          style={{
-            color: "#8fdcff",
-            textDecoration: "underline",
-            cursor: "pointer"
-          }}
-        >
-          Create one here
-        </span>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            required
+            onChange={(e) => setPassword(e.target.value)}
+            style={{
+              marginBottom: '20px',
+              padding: '12px',
+              width: '150px',
+              borderRadius: '12px',
+              border: '1px solid #8fdcff',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              color: '#8fdcff',
+              fontSize: '16px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              backdropFilter: 'blur(6px)',
+              outline: 'none',
+              transition: '0.3s ease',
+            }}
+          />
+
+          <button
+            type="submit"
+            style={{
+              width: '175px',
+              padding: '10px 0',
+              backgroundColor: '#fff',
+              color: '#000',
+              border: 'none',
+              borderRadius: '6px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+            }}
+          >
+            Log In
+          </button>
+        </form>
+
+        {/* Forgot password and register links grouped */}
+        <div style={{ marginTop: '1.2rem', fontSize: '0.95rem', textAlign: 'center' }}>
+          <p>
+            Forgot password?{' '}
+            <Link to="/forgot-password" style={{ color: '#8fdcff', textDecoration: 'underline' }}>
+              Reset here
+            </Link>
+          </p>
+          <p>
+            Don’t have an account?{' '}
+            <span
+              onClick={() => navigate('/register')}
+              style={{ color: '#8fdcff', textDecoration: 'underline', cursor: 'pointer' }}
+            >
+              Create one here
+            </span>
+          </p>
+        </div>
+
+        {/* OR separator */}
+        <div style={{ margin: '20px 0', color: '#8fdcff' }}>────────  or  ────────</div>
+
+        {/* Google Sign In */}
+        <div id="g-signin" style={{ marginBottom: '20px' }}></div>
       </div>
-
     </div>
-  </div>
   );
 }
 
 export default Login;
+
