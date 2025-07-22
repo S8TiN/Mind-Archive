@@ -31,23 +31,77 @@ export default function ResetPassword() {
   };
 
   return (
-    <div>
-      <h2>Set New Password</h2>
-      {confirmed ? (
-        <p>Password has been reset. You can now log in.</p>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <input
-            type="password"
-            placeholder="New password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button type="submit">Reset Password</button>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-        </form>
-      )}
+    <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+        <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: -1
+        }}
+        >
+        <source src="/star.mp4" type="video/mp4" />
+        </video>
+
+        <div style={{
+        color: '#8fdcff',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        padding: '20px',
+        position: 'relative'
+        }}>
+        <h2>Set a New Password</h2>
+
+        {confirmed ? (
+            <p>Your password has been reset. You can now log in! 🌟</p>
+        ) : (
+            <form onSubmit={handleSubmit} style={{ maxWidth: '400px', width: '100%' }}>
+            <input
+                type="password"
+                placeholder="Enter new password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                padding: '10px',
+                width: '100%',
+                marginBottom: '1rem',
+                borderRadius: '8px',
+                border: '1px solid #8fdcff',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                color: '#8fdcff',
+                outline: 'none'
+                }}
+            />
+            <button
+                type="submit"
+                style={{
+                padding: '10px 20px',
+                backgroundColor: '#8fdcff',
+                color: '#000',
+                border: 'none',
+                borderRadius: '6px',
+                fontWeight: 'bold',
+                cursor: 'pointer'
+                }}
+            >
+                Reset Password
+            </button>
+            {error && <p style={{ color: 'salmon', marginTop: '1rem' }}>{error}</p>}
+            </form>
+        )}
+        </div>
     </div>
-  );
+    );
 }
