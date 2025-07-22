@@ -16,6 +16,9 @@ from django.views.decorators.http import require_GET, require_POST
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
 
 load_dotenv()
 
@@ -157,22 +160,49 @@ def password_reset_request(request):
         if not user:
             return JsonResponse({"error": "No user found with this email."}, status=404)
 
-        # You can generate a token or code — for now we'll just simulate
-        reset_token = get_random_string(32)
+        # Generate UID and secure token
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
 
-        # In real usage, you'd save this token and use it in a password reset link
-        print(f"Reset token for {email}: {reset_token}")  # Or log/store securely
+        # Link to your frontend reset form
+        reset_link = f"http://localhost:3000/reset-password/{uid}/{token}"
 
-        # Send a basic reset email
+        # Send reset link by email
         send_mail(
-            subject='Your Password Reset Link',
-            message=f"Hi {user.username},\n\nTo reset your password, use this token: {reset_token}",
+            subject='Reset your password',
+            message=f"Hi {user.username},\n\nClick the link below to reset your password:\n\n{reset_link}",
             from_email='noreply@mindarchive.com',
             recipient_list=[email],
             fail_silently=False,
         )
 
         return JsonResponse({"message": "Password reset email sent."})
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"error": str(e)}, status=500)
+    
+@csrf_exempt
+@require_POST
+def password_reset_confirm(request, uidb64, token):
+    try:
+        data = json.loads(request.body)
+        new_password = data.get("password")
+
+        if not new_password:
+            return JsonResponse({"error": "New password is required."}, status=400)
+
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+
+        if not default_token_generator.check_token(user, token):
+            return JsonResponse({"error": "Invalid or expired token."}, status=400)
+
+        user.set_password(new_password)
+        user.save()
+
+        return JsonResponse({"message": "Password has been reset successfully."})
 
     except Exception as e:
         import traceback
