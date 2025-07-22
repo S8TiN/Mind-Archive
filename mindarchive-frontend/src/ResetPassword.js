@@ -6,10 +6,16 @@ export default function ResetPassword() {
   const [password, setPassword] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (password !== confirmPassword) {
+        setError('Passwords do not match.');
+        return;
+        }
 
     try {
       const response = await fetch(`http://localhost:8000/api/password-reset-confirm/${uid}/${token}/`, {
@@ -74,16 +80,35 @@ export default function ResetPassword() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 style={{
-                padding: '10px',
-                width: '100%',
-                marginBottom: '1rem',
-                borderRadius: '8px',
-                border: '1px solid #8fdcff',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                color: '#8fdcff',
-                outline: 'none'
+                    padding: '10px',
+                    width: '100%',
+                    marginBottom: '1rem',
+                    borderRadius: '8px',
+                    border: '1px solid #8fdcff',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    color: '#8fdcff',
+                    outline: 'none'
                 }}
-            />
+                />
+
+                <input
+                type="password"
+                placeholder="Confirm new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                style={{
+                    padding: '10px',
+                    width: '100%',
+                    marginBottom: '1rem',
+                    borderRadius: '8px',
+                    border: '1px solid #8fdcff',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    color: '#8fdcff',
+                    outline: 'none'
+                }}
+                />
+
             <button
                 type="submit"
                 style={{
