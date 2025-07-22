@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 export default function ResetPassword() {
   const { uid, token } = useParams();
@@ -9,6 +8,7 @@ export default function ResetPassword() {
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPasswords, setShowPasswords] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +55,7 @@ export default function ResetPassword() {
           zIndex: -1
         }}
       >
-        <source src="/star.mp4" type="video/mp4" />
+        <source src="/resetpasswordwallpaper.mp4" type="video/mp4" />
       </video>
 
       <div
@@ -71,7 +71,7 @@ export default function ResetPassword() {
           position: 'relative'
         }}
       >
-        <h2>Set a New Password</h2>
+        <h2 style={{ color: '#000' }}>Set a New Password</h2>
 
         {confirmed ? (
           <>
@@ -94,41 +94,59 @@ export default function ResetPassword() {
           </>
         ) : (
           <form onSubmit={handleSubmit} style={{ maxWidth: '400px', width: '100%' }}>
-            <input
-              type="password"
-              placeholder="Enter new password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{
-                padding: '10px',
-                width: '100%',
-                marginBottom: '1rem',
-                borderRadius: '8px',
-                border: '1px solid #8fdcff',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                color: '#8fdcff',
-                outline: 'none'
-              }}
-            />
+            {/* First password field with toggle icon */}
+            <div style={{ position: 'relative', marginBottom: '1rem' }}>
+              <input
+                type={showPasswords ? 'text' : 'password'}
+                placeholder="Enter new password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  padding: '10px',
+                  width: '95%',
+                  borderRadius: '8px',
+                  border: '1px solid #000',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  color: '#000',
+                  outline: 'none'
+                }}
+              />
+              <img
+                src={showPasswords ? '/hide.png' : '/show.png'}
+                alt="Toggle password visibility"
+                onClick={() => setShowPasswords(prev => !prev)}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: '10px',
+                  transform: 'translateY(-50%)',
+                  cursor: 'pointer',
+                  width: '20px',
+                  height: '20px'
+                }}
+              />
+            </div>
 
-            <input
-              type="password"
-              placeholder="Confirm new password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              style={{
-                padding: '10px',
-                width: '100%',
-                marginBottom: '1rem',
-                borderRadius: '8px',
-                border: '1px solid #8fdcff',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                color: '#8fdcff',
-                outline: 'none'
-              }}
-            />
+            {/* Second password field (no icon, just follows state) */}
+            <div style={{ position: 'relative', marginBottom: '1rem' }}>
+              <input
+                type={showPasswords ? 'text' : 'password'}
+                placeholder="Confirm new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                style={{
+                  padding: '10px',
+                  width: '95%',
+                  borderRadius: '8px',
+                  border: '1px solid #000',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  color: '#000',
+                  outline: 'none'
+                }}
+              />
+            </div>
 
             <button
               type="submit"
@@ -152,4 +170,3 @@ export default function ResetPassword() {
     </div>
   );
 }
-
