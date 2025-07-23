@@ -75,7 +75,7 @@ export default function ResetPassword() {
 
         {confirmed ? (
           <>
-            <p>Your password has been reset. You can now log in!</p>
+            <p style={{ color: '#000' }}>Your password has been reset. You can now log in!</p>
             <button
               onClick={() => navigate('/login')}
               style={{
