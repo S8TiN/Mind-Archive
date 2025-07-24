@@ -329,7 +329,7 @@ function App() {
     </div>
 
 
-      <h1 style={{ marginBottom: '8px' }}>Mind Archive 🌌</h1>
+      <h1 style={{ marginBottom: '8px' }}>Mind Archive</h1>
       <p style={{ fontSize: '20px', fontWeight: 'bold' }}>
         Welcome, {user.username}!
       </p>
