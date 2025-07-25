@@ -26,28 +26,27 @@ def home(request):
     return JsonResponse({"message": "Welcome to the Mind Archive API 🌌"})
 
 class MemoryEntryViewSet(viewsets.ModelViewSet):
-    queryset = MemoryEntry.objects.all()
     serializer_class = MemoryEntrySerializer
     parser_classes = [MultiPartParser, FormParser, JSONParser] 
 
+    def get_queryset(self):
+        return MemoryEntry.objects.filter(user=self.request.user)
+
     def perform_create(self, serializer):
-        memory = serializer.save()
-        images = self.request.FILES.getlist('images')  # this expects form field name to be "images"
+        memory = serializer.save(user=self.request.user)
+        images = self.request.FILES.getlist('images')  # expects field name to be "images"
         for image in images:
             MemoryImage.objects.create(memory=memory, image=image)
-    
+
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)
 
-        # Save any newly uploaded image file(s)
         memory = self.get_object()
         new_images = request.FILES.getlist('image')  # field name from frontend
-
         for image in new_images:
             MemoryImage.objects.create(memory=memory, image=image)
 
         return response
-
 
 @login_required
 def user_info(request):
