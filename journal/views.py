@@ -3,22 +3,25 @@ import json
 from dotenv import load_dotenv
 
 from django.http import JsonResponse
-from rest_framework import viewsets, generics
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from .models import MemoryEntry, MemoryImage
-from .serializers import MemoryEntrySerializer, MemoryImageSerializer
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
+
+from rest_framework import viewsets, generics
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+
+from .models import MemoryEntry, MemoryImage
+from .serializers import MemoryEntrySerializer, MemoryImageSerializer
 
 load_dotenv()
 
@@ -65,7 +68,7 @@ def user_info(request):
 def get_csrf_token(request):
     return JsonResponse({'message': 'CSRF cookie set'})
 
-# ✅ Final Google login view (with profile picture)
+#Final Google login view (with profile picture)
 @csrf_exempt
 @require_POST
 def google_login(request):
