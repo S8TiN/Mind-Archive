@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
-from .social_urls import GoogleLogin
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.conf.urls.static import static
+
+from .social_urls import GoogleLogin
 
 #CSRF endpoint view
 @ensure_csrf_cookie
@@ -26,4 +27,5 @@ urlpatterns = [
     path('csrf/', get_csrf),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #serve uploaded media files
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
