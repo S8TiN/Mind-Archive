@@ -15,6 +15,7 @@ from django.utils.encoding import force_bytes, force_str
 
 from rest_framework import viewsets, generics
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.authtoken.models import Token
 
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -67,48 +68,54 @@ def user_info(request):
 def get_csrf_token(request):
     return JsonResponse({'message': 'CSRF cookie set'})
 
-#Final Google login view (with profile picture)
 @csrf_exempt
 @require_POST
 def google_login(request):
     try:
-        data = json.loads(request.body)
-        token = data.get("credential")
-        if not token:
-            return JsonResponse({"error": "Missing token"}, status=400)
+        token = json.loads(request.body).get("credential")
 
-        # Verify Google token
         idinfo = id_token.verify_oauth2_token(
             token,
             google_requests.Request(),
             os.getenv("GOOGLE_CLIENT_ID")
         )
 
-        # Extract user info
-        email = idinfo["email"]
-        name = idinfo.get("name", email.split("@")[0])
-        picture = idinfo.get("picture")  # ✅ profile image
+        print("👁 Token audience (aud):", idinfo.get("aud"))
+        print("✅ Expected client ID:", os.getenv("GOOGLE_CLIENT_ID"))
+        print("📧 Email from token:", idinfo.get("email"))
 
-        # Create or get the user
-        user, created = User.objects.get_or_create(
-            email=email,
-            defaults={"username": email.split("@")[0]}
-        )
-        login(request, user)
+    except ValueError as e:
+        print("❌ Token verification failed:", e)
+        return JsonResponse({'error': 'Invalid token'}, status=401)
 
-        return JsonResponse({
-            "token": "session",  # placeholder
-            "user": {
-                "name": name,
-                "email": email,
-                "picture": picture
-            }
-        })
+    # ✅ Extract user info
+    email = idinfo["email"]
+    name = idinfo.get("name", email.split("@")[0])
+    picture = idinfo.get("picture", "")
 
-    except ValueError:
-        return JsonResponse({"error": "Invalid token"}, status=401)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+    # ✅ Create or get the user
+    user, created = User.objects.get_or_create(
+        email=email,
+        defaults={"username": name}
+    )
+
+    # Optional: update name or picture
+    if not user.username:
+        user.username = name
+        user.save()
+
+    # ✅ Generate a token (assuming Token auth or customize if using JWT)
+    token, _ = Token.objects.get_or_create(user=user)
+
+    return JsonResponse({
+        "token": token.key,
+        "user": {
+            "username": user.username,
+            "email": user.email,
+            "profile_picture": picture
+        }
+    })
+
     
 @csrf_exempt
 @require_POST

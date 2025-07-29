@@ -22,6 +22,7 @@ class MemoryEntrySerializer(serializers.ModelSerializer):
             'profile_picture',
             'images',
             'is_favorite',
+            'user',
         ]
 
 

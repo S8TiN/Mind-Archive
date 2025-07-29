@@ -93,8 +93,23 @@ function Login({ onLoginSuccess }) {
       const data = await response.json();
       if (response.ok && data.key) {
         localStorage.setItem('authToken', data.key);
-        navigate('/dashboard');
-      } else {
+
+        // 🔁 Fetch user info (uses token via session)
+        const userRes = await fetch('http://localhost:8000/api/user/', {
+          credentials: 'include'
+        });
+        const userData = await userRes.json();
+
+        if (userRes.ok) {
+          localStorage.setItem('user', JSON.stringify(userData));
+          navigate('/dashboard');
+        } else {
+          alert('Login succeeded, but failed to fetch user data');
+        }
+      }
+
+
+      else {
         alert('Login failed: ' + (data?.non_field_errors || data?.detail || 'Unknown error'));
       }
     } catch (error) {

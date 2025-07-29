@@ -41,18 +41,15 @@ function App() {
   }
 }, []);
 
-  const fetchUser = async () => {
-    try {
-      const res = await fetch("http://localhost:8000/api/user/", {
-        credentials: "include",
-      });
-      if (res.status === 200) {
-        const data = await res.json();
-        setUser(data);
-      } else {
+  const fetchUser = () => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        setUser(JSON.parse(userStr));
+      } catch {
         setUser(null);
       }
-    } catch {
+    } else {
       setUser(null);
     }
   };
@@ -69,10 +66,27 @@ function App() {
     }, []);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/memories/')
-      .then(res => res.json())
-      .then(data => setMemories(data));
-  }, []);
+    const token = localStorage.getItem("authToken");
+
+    if (!user || !token) return;
+
+    fetch('http://127.0.0.1:8000/api/memories/', {
+      headers: {
+        'Authorization': `Token ${token}`,
+      },
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => setMemories(data))
+      .catch((err) => {
+        console.error('Error fetching memories:', err);
+      });
+  }, [user]);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -95,11 +109,16 @@ function App() {
       if (!draggingId) return;
       const memory = memories.find((m) => m.id === draggingId);
       if (memory) {
+        const token = localStorage.getItem("authToken");
         fetch(`http://127.0.0.1:8000/api/memories/${memory.id}/`, {
           method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Token ${token}` : '',
+          },
           body: JSON.stringify({ x: memory.x, y: memory.y }),
         });
+
       }
       setDraggingId(null);
       sectionIndexRef.current = null;
@@ -147,9 +166,15 @@ function App() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this memory?')) return;
+    const token = localStorage.getItem("authToken");
+
     const response = await fetch(`http://127.0.0.1:8000/api/memories/${id}/`, {
       method: 'DELETE',
+      headers: {
+        'Authorization': token ? `Token ${token}` : '',
+      },
     });
+
     if (response.ok) {
       toast.success("Memory deleted.");
       setMemories(prev => prev.filter(m => m.id !== id));
@@ -335,11 +360,16 @@ function App() {
       </p>
 
       <NewMemoryForm onAdd={() => {
-        fetch('http://127.0.0.1:8000/api/memories/')
+        const token = localStorage.getItem("authToken");
+        fetch('http://127.0.0.1:8000/api/memories/', {
+          headers: {
+            'Authorization': token ? `Token ${token}` : '',
+          },
+        })
           .then(res => res.json())
           .then(data => {
             setMemories(data);
-            setSelectedMemory(null); 
+            setSelectedMemory(null);
           });
       }} />
 
@@ -455,14 +485,16 @@ function App() {
               formData.append("image", imageFile);
             }
 
+            const token = localStorage.getItem("authToken");
+
             const res = await fetch(`http://127.0.0.1:8000/api/memories/${selectedMemory.id}/`, {
               method: 'PATCH',
               body: formData,
               headers: {
-                // DON'T include 'Content-Type', let the browser set it
+                'Authorization': token ? `Token ${token}` : '',
+                // Don't add Content-Type — FormData handles it
               },
             });
-
 
             if (res.ok) {
               const updated = await res.json();
@@ -689,9 +721,14 @@ function App() {
                   is_favorite: !selectedMemory.is_favorite
                 };
 
+                const token = localStorage.getItem("authToken");
+
                 const res = await fetch(`http://127.0.0.1:8000/api/memories/${selectedMemory.id}/`, {
                   method: 'PATCH',
-                  headers: { 'Content-Type': 'application/json' },
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`
+                  },
                   body: JSON.stringify({ is_favorite: updated.is_favorite }),
                 });
 
