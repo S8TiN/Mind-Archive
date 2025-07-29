@@ -91,7 +91,8 @@ function App() {
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!draggingId || sectionIndexRef.current === null) return;
-      const container = containerRefs.current[sectionIndexRef.current];
+      const container = containerRefs.current[sectionIndexRef.current]
+
       if (!container) return;
       const rect = container.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -149,7 +150,6 @@ function App() {
     return `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
   };
 
-
   const groupedMemories = memories.reduce((acc, memory) => {
     const key = getMonthYear(memory.title);
     if (!acc[key]) acc[key] = [];
@@ -179,7 +179,8 @@ function App() {
       toast.success("Memory deleted.");
       setMemories(prev => prev.filter(m => m.id !== id));
       setSelectedMemory(null);
-    } else {
+    }
+    else {
       toast.error("Failed to delete memory.");
     }
   };
@@ -675,8 +676,6 @@ function App() {
           >
             ✕
           </div>
-
-
 
           <div>
             <h3 style={{ marginBottom: '8px', color: '#000' }}>{selectedMemory.title}</h3>
