@@ -99,10 +99,16 @@ def google_login(request):
         defaults={"username": name}
     )
 
-    # Optional: update name or picture
     if not user.username:
         user.username = name
         user.save()
+
+    # ✅ Create or update profile with Google picture
+    from .models import UserProfile  # add this at the top if not already imported
+
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    profile.profile_picture = picture
+    profile.save()
 
     # ✅ Generate a token (assuming Token auth or customize if using JWT)
     token, _ = Token.objects.get_or_create(user=user)
@@ -136,8 +142,6 @@ def register_user(request):
         user = User.objects.create_user(username=username, password=password)
         user.profile_picture = profile_picture  # ✅ make sure this field exists
         user.save()
-
-        login(request, user)
 
         return JsonResponse({
             "token": "session",

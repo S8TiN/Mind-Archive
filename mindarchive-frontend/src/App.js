@@ -263,7 +263,7 @@ function App() {
       </div>
 
       <img
-        src={user?.picture || "/avatars/avatar1.jpg"}
+        src={user?.profile_picture || "/avatars/avatar1.jpg"}
         alt="Profile"
         onClick={() => setShowMenu(prev => !prev)}
         style={{
