@@ -34,7 +34,6 @@ function Login({ onLoginSuccess }) {
       const res = await fetch('http://localhost:8000/csrf/', {
         credentials: 'include',
       });
-      console.log('CSRF cookie set:', res.status);
     } catch (err) {
       console.error('Failed to fetch CSRF:', err);
     }
@@ -94,7 +93,6 @@ function Login({ onLoginSuccess }) {
       if (response.ok && data.key) {
         localStorage.setItem('authToken', data.key);
 
-        // 🔁 Fetch user info (uses token via session)
         const userRes = await fetch('http://localhost:8000/api/user/', {
           credentials: 'include'
         });
@@ -107,7 +105,6 @@ function Login({ onLoginSuccess }) {
           alert('Login succeeded, but failed to fetch user data');
         }
       }
-
 
       else {
         alert('Login failed: ' + (data?.non_field_errors || data?.detail || 'Unknown error'));
