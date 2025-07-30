@@ -46,10 +46,6 @@ function NewMemoryForm({ onAdd }) {
       formData.append('images', img);
     });
 
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ':', pair[1]);
-    }
-
     const csrfToken = getCSRFTokenFromCookie();
 
     const response = await fetch('http://127.0.0.1:8000/api/memories/', {
@@ -77,7 +73,7 @@ function NewMemoryForm({ onAdd }) {
       onSubmit={handleSubmit}
       style={{
         marginBottom: '1rem',
-        color: theme === 'dark' ? '#8fdcff' : '#000', //switch text color based on theme
+        color: theme === 'dark' ? '#8fdcff' : '#000',
         display: 'flex',
         flexDirection: 'column',
         gap: '12px',
@@ -176,8 +172,6 @@ function NewMemoryForm({ onAdd }) {
             )}
           </div>
         ))}
-
-
 
         <button
           type="button"
