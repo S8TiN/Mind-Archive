@@ -9,6 +9,18 @@ function NewMemoryForm({ onAdd }) {
   const [color, setColor] = useState('#ffffff'); 
   const [images, setImages] = useState([null]);
 
+  const [recentColors, setRecentColors] = useState(() => {
+    return JSON.parse(localStorage.getItem('recentColors')) || [];
+  });
+
+  const updateRecentColors = (newColor) => {
+    setRecentColors((prev) => {
+      const updated = [newColor, ...prev.filter(c => c !== newColor)].slice(0, 5);
+      localStorage.setItem('recentColors', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   const handleImageChange = (index, file) => {
     if (!file) return;  //Prevents null uploads
     const newImages = [...images];
@@ -57,15 +69,16 @@ function NewMemoryForm({ onAdd }) {
       body: formData,
     });
 
-
     if (response.ok) {
       toast.success("Memory saved");
+      updateRecentColors(color);  // <- only save the color if the memory actually saved
       onAdd();
       setTitle('');
       setContent('');
       setColor('#ffffff');
       setImages([]);
     }
+
   };
 
   return (
@@ -113,6 +126,24 @@ function NewMemoryForm({ onAdd }) {
           onChange={(e) => setColor(e.target.value)}
           style={{ width: '100%' }}
         />
+      </div>
+
+      <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
+        {recentColors.map((c, index) => (
+          <button
+            key={index}
+            onClick={() => setColor(c)}
+            style={{
+              width: '24px',
+              height: '24px',
+              borderRadius: '50%',
+              border: '1px solid #ccc',
+              backgroundColor: c,
+              cursor: 'pointer'
+            }}
+            aria-label={`Use recent color ${c}`}
+          />
+        ))}
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
