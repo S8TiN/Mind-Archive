@@ -128,23 +128,28 @@ function NewMemoryForm({ onAdd }) {
         />
       </div>
 
-      <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
-        {recentColors.map((c, index) => (
-          <button
-            key={index}
-            onClick={() => setColor(c)}
-            style={{
-              width: '24px',
-              height: '24px',
-              borderRadius: '50%',
-              border: '1px solid #ccc',
-              backgroundColor: c,
-              cursor: 'pointer'
-            }}
-            aria-label={`Use recent color ${c}`}
-          />
-        ))}
-      </div>
+      {recentColors.length > 0 && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.9rem', color: theme === 'dark' ? '#8fdcff' : '#000' }}>
+            Recently Used:
+          </span>
+          {recentColors.map((c, index) => (
+            <button
+              key={index}
+              onClick={() => setColor(c)}
+              style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                border: '1px solid #ccc',
+                backgroundColor: c,
+                cursor: 'pointer'
+              }}
+              aria-label={`Use recent color ${c}`}
+            />
+          ))}
+        </div>
+      )}
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <label style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Images:</label>
