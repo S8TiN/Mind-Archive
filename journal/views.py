@@ -16,6 +16,7 @@ from django.utils.encoding import force_bytes, force_str
 from rest_framework import viewsets, generics
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -30,6 +31,7 @@ def home(request):
 
 class MemoryEntryViewSet(viewsets.ModelViewSet):
     serializer_class = MemoryEntrySerializer
+    permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser, JSONParser] 
 
     def get_queryset(self):

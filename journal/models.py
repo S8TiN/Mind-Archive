@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class MemoryEntry(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='memories', null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='memories')
     title = models.CharField(max_length=100)
     content = models.TextField()
 

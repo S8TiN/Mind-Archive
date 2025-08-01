@@ -113,6 +113,7 @@ LOGIN_URL = "/does-not-exist/"
 # ✅ DRF config to prevent silent redirect fallback
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
     'UNAUTHENTICATED_USER': None,

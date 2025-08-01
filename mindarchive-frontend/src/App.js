@@ -71,10 +71,11 @@ function App() {
     if (!user || !token) return;
 
     fetch('http://127.0.0.1:8000/api/memories/', {
+      method: 'GET',
       headers: {
-        'Authorization': `Token ${token}`,
+        'Authorization': token ? `Token ${token}` : '',
+        'Content-Type': 'application/json',
       },
-      credentials: 'include',
     })
       .then((res) => {
         if (!res.ok) {
@@ -82,7 +83,10 @@ function App() {
         }
         return res.json();
       })
-      .then((data) => setMemories(data))
+      .then((data) => {
+        setMemories(data);
+        console.log("🧠 Received memories:", data);
+      })
       .catch((err) => {
         console.error('Error fetching memories:', err);
       });
@@ -111,11 +115,13 @@ function App() {
       const memory = memories.find((m) => m.id === draggingId);
       if (memory) {
         const token = localStorage.getItem("authToken");
+        console.log("📦 Using token:", token);
+
         fetch(`http://127.0.0.1:8000/api/memories/${memory.id}/`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': token ? `Token ${token}` : '',
+            'Authorization': `Token ${token}`,
           },
           body: JSON.stringify({ x: memory.x, y: memory.y }),
         });

@@ -91,6 +91,7 @@ function Login({ onLoginSuccess }) {
 
       const data = await response.json();
       if (response.ok && data.key) {
+        console.log("Saving token to localStorage:", data.key);
         localStorage.setItem('authToken', data.key);
 
         const userRes = await fetch('http://localhost:8000/api/user/', {
