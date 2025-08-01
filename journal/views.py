@@ -95,11 +95,10 @@ def google_login(request):
     name = idinfo.get("name", email.split("@")[0])
     picture = idinfo.get("picture", "")
 
-    # ✅ Create or get the user
-    user, created = User.objects.get_or_create(
-        email=email,
-        defaults={"username": name}
-    )
+    # ✅ Create or get the user (prevent duplicate emails)
+    user = User.objects.filter(email=email).first()
+    if not user:
+        user = User.objects.create_user(username=name, email=email)
 
     if not user.username:
         user.username = name
