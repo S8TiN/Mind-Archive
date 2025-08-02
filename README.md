@@ -4,7 +4,7 @@ Mind Archive is a journaling web app built with Django and React. Users log mean
 
 ## ✨ Features
 - **Add, edit, and delete memory entries**
-- Stars representing memories are displayed on a canvas:
+  - Stars representing memories are displayed on a canvas
   - Positioned with randomized coordinates, draggable, and saved per user
   - Persisted across sessions
 - **Memory entries support:**
