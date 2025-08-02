@@ -3,17 +3,25 @@
 Mind Archive is a journaling web app built with Django and React. Users log meaningful life memories, visualized as stars in a night-sky-like constellation. Entries can be dragged and rearranged, making your memory space truly personal.
 
 ## ✨ Features
-- Add and view memory entries on a timeline-based star map
-- Drag stars to reposition them — saved persistently across sessions
-- Entries include:
+- **Add, edit, and delete memory entries**
+- Stars representing memories are displayed on a canvas:
+  - Positioned with randomized coordinates, draggable, and saved per user
+  - Persisted across sessions
+- **Memory entries support:**
   - Date
   - Description
-  - Color
-  - Optional image
-- Chronological constellations connect entries by month
-- Light/Dark mode toggle
-- Django Admin panel for backend management
-- Google OAuth login (session-based auth)
+  - Color (with personalized recent-color tracking per user)
+  - Multiple optional image uploads
+  - Favorite pinning
+- **Constellation view:**
+  - Entries are grouped and connected by month/year
+  - Chronological linking within each group
+- **Customizable experience:**
+  - Dark/Light theme toggle
+  - Timezone/region selection with live clock
+- **User accounts:**
+  - Google OAuth login
+  - Memories shown only for the logged-in user
 
 ## 🚀 Setup Instructions
 
@@ -35,7 +43,7 @@ Mind Archive is a journaling web app built with Django and React. Users log mean
    python manage.py migrate
    ```
 
-4. Start the development server:
+4. Start the backend development server:
    ```bash
    python manage.py runserver
    ```
@@ -45,6 +53,7 @@ Mind Archive is a journaling web app built with Django and React. Users log mean
    cd frontend
    npm install
    npm start
+   ```
 
 ## 🛠 Tech Stack
 - **Backend:** Django + Django REST Framework  
