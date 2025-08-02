@@ -60,14 +60,22 @@ function NewMemoryForm({ onAdd }) {
 
     const csrfToken = getCSRFTokenFromCookie();
 
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ':', pair[1]);
+    }
+
+    const token = localStorage.getItem("authToken");
+
     const response = await fetch('http://127.0.0.1:8000/api/memories/', {
       method: 'POST',
       headers: {
+        'Authorization': `Token ${localStorage.getItem('authToken')}`,
         'X-CSRFToken': csrfToken,
       },
       credentials: 'include',
       body: formData,
     });
+
 
     if (response.ok) {
       toast.success("Memory saved");

@@ -24,5 +24,5 @@ class MemoryEntrySerializer(serializers.ModelSerializer):
             'is_favorite',
             'user',
         ]
-
+        read_only_fields = ['user']
 
