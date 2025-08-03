@@ -107,10 +107,10 @@ SOCIALACCOUNT_PROVIDERS = {
 
 LOGIN_REDIRECT_URL = "http://localhost:3000"
 
-# ✅ Prevent redirecting to /accounts/login/ (which doesn't exist)
+#Prevent redirecting to /accounts/login/ (which doesn't exist)
 LOGIN_URL = "/does-not-exist/"
 
-# ✅ DRF config to prevent silent redirect fallback
+#DRF config to prevent silent redirect fallback
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -124,7 +124,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-# Optional allauth settings to use email-only auth (if desired)
+#Optional allauth settings to use email-only auth (if desired)
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
