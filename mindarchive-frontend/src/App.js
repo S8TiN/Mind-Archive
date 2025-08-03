@@ -85,7 +85,6 @@ function App() {
       })
       .then((data) => {
         setMemories(data);
-        console.log("🧠 Received memories:", data);
       })
       .catch((err) => {
         console.error('Error fetching memories:', err);
@@ -115,7 +114,6 @@ function App() {
       const memory = memories.find((m) => m.id === draggingId);
       if (memory) {
         const token = localStorage.getItem("authToken");
-        console.log("📦 Using token:", token);
 
         fetch(`http://127.0.0.1:8000/api/memories/${memory.id}/`, {
           method: 'PATCH',
