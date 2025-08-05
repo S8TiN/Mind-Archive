@@ -335,7 +335,6 @@ function App() {
             🌍 Change Region
           </div>
 
-
           <div
             onClick={() => {
               localStorage.removeItem("authToken");
@@ -357,7 +356,6 @@ function App() {
         </div>
       )}
     </div>
-
 
       <h1 style={{ marginBottom: '8px' }}>Mind Archive</h1>
       <p style={{ fontSize: '20px', fontWeight: 'bold' }}>
@@ -627,7 +625,6 @@ function App() {
     <button type="submit">Save</button>
   </form>
 )}
-
 
       {selectedMemory && !editing && (
         <div
