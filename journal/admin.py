@@ -9,4 +9,4 @@ class MemoryEntryAdmin(admin.ModelAdmin):
     inlines = [MemoryImageInline]
 
 admin.site.register(MemoryEntry, MemoryEntryAdmin)
-admin.site.register(MemoryImage)  # Optional if you want standalone view
+admin.site.register(MemoryImage)
