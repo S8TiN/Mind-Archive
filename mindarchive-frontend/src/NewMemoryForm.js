@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
-import { ThemeContext } from './ThemeContext'; //make sure this path is correct
+import { ThemeContext } from './ThemeContext';
 
 function NewMemoryForm({ onAdd, user }) {
   const { theme } = useContext(ThemeContext); //get theme from context
@@ -28,7 +28,7 @@ function NewMemoryForm({ onAdd, user }) {
   };
 
   const handleImageChange = (index, file) => {
-    if (!file) return;  //Prevents null uploads
+    if (!file) return;
     const newImages = [...images];
     newImages[index] = file;
     setImages(newImages);
