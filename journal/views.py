@@ -39,7 +39,7 @@ class MemoryEntryViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         memory = serializer.save(user=self.request.user)
-        images = self.request.FILES.getlist('images')  # expects field name to be "images"
+        images = self.request.FILES.getlist('images')
         for image in images:
             MemoryImage.objects.create(memory=memory, image=image)
 
@@ -105,7 +105,7 @@ def google_login(request):
         user.save()
 
     # ✅ Create or update profile with Google picture
-    from .models import UserProfile  # add this at the top if not already imported
+    from .models import UserProfile
 
     profile, _ = UserProfile.objects.get_or_create(user=user)
     profile.profile_picture = picture
@@ -141,7 +141,7 @@ def register_user(request):
             return JsonResponse({"error": "Username already taken"}, status=400)
 
         user = User.objects.create_user(username=username, password=password)
-        user.profile_picture = profile_picture  # ✅ make sure this field exists
+        user.profile_picture = profile_picture
         user.save()
 
         return JsonResponse({
