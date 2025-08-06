@@ -1,22 +1,28 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { ThemeContext } from './ThemeContext'; //make sure this path is correct
 
-function NewMemoryForm({ onAdd }) {
+function NewMemoryForm({ onAdd, user }) {
   const { theme } = useContext(ThemeContext); //get theme from context
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [color, setColor] = useState('#ffffff'); 
   const [images, setImages] = useState([null]);
 
-  const [recentColors, setRecentColors] = useState(() => {
-    return JSON.parse(localStorage.getItem('recentColors')) || [];
-  });
+  const userEmail = user?.email || 'guest';
+
+  const [recentColors, setRecentColors] = useState([]);
+  useEffect(() => {
+    const stored = localStorage.getItem(`recentColors_${userEmail}`);
+    if (stored) {
+      setRecentColors(JSON.parse(stored));
+    }
+  }, [userEmail]);
 
   const updateRecentColors = (newColor) => {
     setRecentColors((prev) => {
       const updated = [newColor, ...prev.filter(c => c !== newColor)].slice(0, 5);
-      localStorage.setItem('recentColors', JSON.stringify(updated));
+      localStorage.setItem(`recentColors_${userEmail}`, JSON.stringify(updated));
       return updated;
     });
   };
@@ -59,7 +65,7 @@ function NewMemoryForm({ onAdd }) {
     });
 
     const csrfToken = getCSRFTokenFromCookie();
-    
+
     const token = localStorage.getItem("authToken");
 
     const response = await fetch('http://127.0.0.1:8000/api/memories/', {

@@ -362,19 +362,22 @@ function App() {
         Welcome, {user.username}!
       </p>
 
-      <NewMemoryForm onAdd={() => {
-        const token = localStorage.getItem("authToken");
-        fetch('http://127.0.0.1:8000/api/memories/', {
-          headers: {
-            'Authorization': token ? `Token ${token}` : '',
-          },
-        })
-          .then(res => res.json())
-          .then(data => {
-            setMemories(data);
-            setSelectedMemory(null);
-          });
-      }} />
+      <NewMemoryForm 
+        user={user}
+        onAdd={() => {
+          const token = localStorage.getItem("authToken");
+          fetch('http://127.0.0.1:8000/api/memories/', {
+            headers: {
+              'Authorization': token ? `Token ${token}` : '',
+            },
+          })
+            .then(res => res.json())
+            .then(data => {
+              setMemories(data);
+              setSelectedMemory(null);
+            });
+        }} 
+      />
 
       {monthKeys.map((monthKey, index) => {
         const monthMemories = [...groupedMemories[monthKey]].sort((a, b) => new Date(a.title) - new Date(b.title));
