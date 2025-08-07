@@ -244,8 +244,7 @@ function App() {
         </video>
       )}
 
-
-          {/* 🌐 Profile picture dropdown toggle */}
+          {/* Profile picture dropdown toggle */}
     <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', alignItems: 'center', gap: '12px', zIndex: 1000 }}>
       <div style={{ 
         color: theme === 'dark' ? '#8fdcff' : '#333', 
@@ -320,7 +319,7 @@ function App() {
           <div
             onClick={() => {
               setShowMenu(false);
-              navigate('/region');  // ⬅️ now using React Router
+              navigate('/region'); 
             }}
             style={{
               padding: '8px',
@@ -506,7 +505,7 @@ function App() {
               const updated = await res.json();
               toast.success("Memory updated");
 
-              // 🔁 Fetch fresh copy from backend (with all images)
+              //Fetch fresh copy from backend (with all images)
               const refreshed = await fetch(`http://127.0.0.1:8000/api/memories/${updated.id}/`)
                 .then(r => r.json());
 
