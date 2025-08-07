@@ -124,7 +124,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-#Optional allauth settings to use email-only auth (if desired)
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
