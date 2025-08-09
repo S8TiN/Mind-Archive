@@ -55,7 +55,7 @@ export default function ForgotPassword() {
         alignItems: 'center',
         textAlign: 'center',
         padding: '20px',
-        position: 'relative' // ⬅️ Add this to keep text above the video
+        position: 'relative'
         }}>
         <h2>Reset Your Password</h2>
 
