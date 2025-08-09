@@ -505,14 +505,13 @@ function App() {
               const updated = await res.json();
               toast.success("Memory updated");
 
-              //Fetch fresh copy from backend (with all images)
               const refreshed = await fetch(`http://127.0.0.1:8000/api/memories/${updated.id}/`)
                 .then(r => r.json());
 
               setMemories((prev) =>
                 prev.map((m) => (m.id === updated.id ? refreshed : m))
               );
-              setSelectedMemory(refreshed); // ✅ Keep selected memory open, now with new images
+              setSelectedMemory(refreshed); //Keep selected memory open, now with new images
               setEditing(false);
             }
             
