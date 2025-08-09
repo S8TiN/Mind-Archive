@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { ThemeContext } from './ThemeContext';
 
 function NewMemoryForm({ onAdd, user }) {
-  const { theme } = useContext(ThemeContext); //get theme from context
+  const { theme } = useContext(ThemeContext);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [color, setColor] = useState('#ffffff'); 
