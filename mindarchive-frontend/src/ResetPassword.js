@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+
 export default function ResetPassword() {
   const { uid, token } = useParams();
   const navigate = useNavigate();
@@ -20,7 +22,7 @@ export default function ResetPassword() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/api/password-reset-confirm/${uid}/${token}/`, {
+      const response = await fetch(`${API_BASE}/api/password-reset-confirm/${uid}/${token}/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
