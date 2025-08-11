@@ -247,6 +247,9 @@ function Login({ onLoginSuccess }) {
           </p>
         </div>
 
+        {/* OR separator */}
+        <div style={{ margin: '20px 0', color: '#8fdcff' }}>────────  or  ────────</div>
+
         <div id="g-signin" style={{ marginBottom: '20px' }}></div>
       </div>
     </div>
