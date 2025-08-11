@@ -14,7 +14,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = os.getenv("DEBUG", "True") == "True"
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-insecure-change-this")
-ALLOWED_HOSTS = _env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
+
+ALLOWED_HOSTS = _env_list("ALLOWED_HOSTS", "localhost,127.0.0.1,mind-archive.onrender.com")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -111,9 +112,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SITE_ID = 1
 
-CORS_ALLOWED_ORIGINS = _env_list("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5173")
-CSRF_TRUSTED_ORIGINS = _env_list("CSRF_TRUSTED_ORIGINS", "http://localhost:3000,http://localhost:5173")
+CORS_ALLOWED_ORIGINS = _env_list(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:3000,http://localhost:5173,https://mindarchive.app,https://www.mindarchive.app"
+)
+
+CSRF_TRUSTED_ORIGINS = _env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    "http://localhost:3000,http://localhost:5173,https://mindarchive.app,https://www.mindarchive.app,https://*.onrender.com"
+)
+
 CORS_ALLOW_CREDENTIALS = True
+
+SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SAMESITE = "None"
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -127,7 +139,8 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-LOGIN_REDIRECT_URL = "http://localhost:3000"
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+LOGIN_REDIRECT_URL = FRONTEND_URL
 
 #Prevent redirecting to /accounts/login/ (which doesn't exist)
 LOGIN_URL = "/does-not-exist/"
