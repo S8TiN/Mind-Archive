@@ -9,7 +9,7 @@ export default function ForgotPassword() {
     e.preventDefault();
 
     try {
-      const response = await fetch('${API_BASE}/api/password-reset/', {
+      const response = await fetch('http://localhost:8000/api/password-reset/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

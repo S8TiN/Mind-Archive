@@ -8,8 +8,6 @@ import './App.css';
 import { ThemeContext } from './ThemeContext';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL || '${API_BASE}';
-
 function App() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   useEffect(() => {
@@ -72,7 +70,7 @@ function App() {
 
     if (!user || !token) return;
 
-    fetch(`${API_BASE}/api/memories/`, {
+    fetch('http://127.0.0.1:8000/api/memories/', {
       method: 'GET',
       headers: {
         'Authorization': token ? `Token ${token}` : '',
@@ -117,7 +115,7 @@ function App() {
       if (memory) {
         const token = localStorage.getItem("authToken");
 
-        fetch(`${API_BASE}/api/memories/${memory.id}/`, {
+        fetch(`http://127.0.0.1:8000/api/memories/${memory.id}/`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -174,7 +172,7 @@ function App() {
     if (!window.confirm('Delete this memory?')) return;
     const token = localStorage.getItem("authToken");
 
-    const response = await fetch(`${API_BASE}/api/memories/${id}/`, {
+    const response = await fetch(`http://127.0.0.1:8000/api/memories/${id}/`, {
       method: 'DELETE',
       headers: {
         'Authorization': token ? `Token ${token}` : '',
@@ -367,7 +365,7 @@ function App() {
         user={user}
         onAdd={() => {
           const token = localStorage.getItem("authToken");
-          fetch(`${API_BASE}/api/memories/`, {
+          fetch('http://127.0.0.1:8000/api/memories/', {
             headers: {
               'Authorization': token ? `Token ${token}` : '',
             },
@@ -494,7 +492,7 @@ function App() {
 
             const token = localStorage.getItem("authToken");
 
-            const res = await fetch(`${API_BASE}/api/memories/${selectedMemory.id}/`, {
+            const res = await fetch(`http://127.0.0.1:8000/api/memories/${selectedMemory.id}/`, {
               method: 'PATCH',
               body: formData,
               headers: {
@@ -507,7 +505,7 @@ function App() {
               const updated = await res.json();
               toast.success("Memory updated");
 
-              const refreshed = await fetch(`${API_BASE}/api/memories/${updated.id}/`)
+              const refreshed = await fetch(`http://127.0.0.1:8000/api/memories/${updated.id}/`)
                 .then(r => r.json());
 
               setMemories((prev) =>
@@ -590,7 +588,7 @@ function App() {
                   <button
                     type="button"
                     onClick={async () => {
-                      const res = await fetch(`${API_BASE}/api/images/${img.id}/`, {
+                      const res = await fetch(`http://127.0.0.1:8000/api/images/${img.id}/`, {
                         method: 'DELETE',
                       });
 
