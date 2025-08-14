@@ -2,6 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
+// READ API BASE FROM ENV (prod & local) — no styling changes
+const API_BASE = (
+  process.env.REACT_APP_API_BASE           // local dev e.g. http://localhost:8000
+  || process.env.REACT_APP_API_BASE_URL    // Vercel prod e.g. https://mind-archive.onrender.com
+  || 'http://localhost:8000'               // fallback
+).replace(/\/+$/, ''); // strip trailing slash
+
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -10,6 +17,7 @@ function Login({ onLoginSuccess }) {
   useEffect(() => {
     fetchCSRFToken();
 
+    // keep your exact Google button & flow (ID token)
     if (window.google) {
       window.google.accounts.id.initialize({
         client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
@@ -31,30 +39,35 @@ function Login({ onLoginSuccess }) {
 
   const fetchCSRFToken = async () => {
     try {
-      const res = await fetch('http://localhost:8000/csrf/', {
-        credentials: 'include',
-      });
+      await fetch(`${API_BASE}/csrf/`, { credentials: 'include' });
     } catch (err) {
       console.error('Failed to fetch CSRF:', err);
     }
   };
 
+  // ID-token callback: post the credential to your backend endpoint
   const handleCredentialResponse = async (response) => {
     try {
-      const res = await fetch('http://localhost:8000/api/google-login/', {
+      // include CSRF header too (some setups require it)
+      const csrf = getCSRFTokenFromCookie();
+
+      const res = await fetch(`${API_BASE}/api/google-login/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrf,
+        },
         credentials: 'include',
         body: JSON.stringify({ credential: response.credential }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok && data.token && data.user) {
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         onLoginSuccess ? onLoginSuccess() : navigate('/dashboard');
       } else {
-        alert('Google login failed: ' + (data.error || ''));
+        alert('Google login failed: ' + (data.error || 'Unknown error'));
       }
     } catch (err) {
       console.error('Google login error:', err);
@@ -67,9 +80,7 @@ function Login({ onLoginSuccess }) {
     const cookies = decodeURIComponent(document.cookie).split(';');
     for (let cookie of cookies) {
       cookie = cookie.trim();
-      if (cookie.startsWith(name)) {
-        return cookie.slice(name.length);
-      }
+      if (cookie.startsWith(name)) return cookie.slice(name.length);
     }
     return '';
   };
@@ -79,7 +90,7 @@ function Login({ onLoginSuccess }) {
     const csrfToken = getCSRFTokenFromCookie();
 
     try {
-      const response = await fetch('http://localhost:8000/api/login/', {
+      const response = await fetch(`${API_BASE}/api/login/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,15 +100,14 @@ function Login({ onLoginSuccess }) {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
       if (response.ok && data.key) {
-        console.log("Saving token to localStorage:", data.key);
         localStorage.setItem('authToken', data.key);
 
-        const userRes = await fetch('http://localhost:8000/api/user/', {
-          credentials: 'include'
+        const userRes = await fetch(`${API_BASE}/api/user/`, {
+          credentials: 'include',
         });
-        const userData = await userRes.json();
+        const userData = await userRes.json().catch(() => ({}));
 
         if (userRes.ok) {
           localStorage.setItem('user', JSON.stringify(userData));
@@ -105,9 +115,7 @@ function Login({ onLoginSuccess }) {
         } else {
           alert('Login succeeded, but failed to fetch user data');
         }
-      }
-
-      else {
+      } else {
         alert('Login failed: ' + (data?.non_field_errors || data?.detail || 'Unknown error'));
       }
     } catch (error) {
@@ -187,7 +195,6 @@ function Login({ onLoginSuccess }) {
               transition: '0.3s ease',
             }}
           />
-
           <input
             type="password"
             placeholder="Password"
@@ -209,7 +216,6 @@ function Login({ onLoginSuccess }) {
               transition: '0.3s ease',
             }}
           />
-
           <button
             type="submit"
             style={{
@@ -227,7 +233,6 @@ function Login({ onLoginSuccess }) {
           </button>
         </form>
 
-        {/* Forgot password and register links grouped */}
         <div style={{ marginTop: '1.2rem', fontSize: '0.95rem', textAlign: 'center' }}>
           <p>
             Forgot password?{' '}
@@ -237,26 +242,23 @@ function Login({ onLoginSuccess }) {
           </p>
           <p>
             Don’t have an account?{' '}
-            <span
-              onClick={() => navigate('/register')}
-              style={{ color: '#8fdcff', textDecoration: 'underline', cursor: 'pointer' }}
-            >
+            <span onClick={() => navigate('/register')} style={{ color: '#8fdcff', textDecoration: 'underline', cursor: 'pointer' }}>
               Create one here
             </span>
           </p>
         </div>
 
-        {/* OR separator */}
         <div style={{ margin: '20px 0', color: '#8fdcff' }}>────────  or  ────────</div>
 
-        {/* Google Sign In */}
-        <div id="g-signin" style={{ marginBottom: '20px' }}></div>
+        {/* Google Sign In (official-rendered button preserved) */}
+        <div id="g-signin" style={{ marginBottom: '20px' }} />
       </div>
     </div>
   );
 }
 
 export default Login;
+
 
 
 
