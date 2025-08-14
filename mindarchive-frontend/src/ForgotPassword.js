@@ -1,24 +1,39 @@
-// src/ForgotPassword.js
 import React, { useState } from 'react';
+import { API_BASE } from './config';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
+  // reuse the same CSRF cookie helper as Login
+  const getCSRFTokenFromCookie = () => {
+    const m = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8000/api/password-reset/', {
+      // prime CSRF cookie (safe if it already exists)
+      await fetch(`${API_BASE}/csrf/`, { credentials: 'include' });
+      const csrf = getCSRFTokenFromCookie();
+
+      const response = await fetch(`${API_BASE}/api/password-reset/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrf,
+        },
         body: JSON.stringify({ email }),
       });
 
       if (response.ok) {
         setSubmitted(true);
       } else {
-        alert('Failed to send reset email.');
+        const txt = await response.text();
+        alert('Failed to send reset email.' + (txt ? `\n\n${txt}` : ''));
       }
     } catch (err) {
       console.error('Error sending password reset:', err);

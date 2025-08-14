@@ -1,27 +1,27 @@
+// src/NewMemoryForm.js
 import React, { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { ThemeContext } from './ThemeContext';
+import { API_BASE } from './config';
 
 function NewMemoryForm({ onAdd, user }) {
   const { theme } = useContext(ThemeContext);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [color, setColor] = useState('#ffffff'); 
-  const [images, setImages] = useState([null]);
+  const [color, setColor] = useState('#ffffff');
+  const [images, setImages] = useState([null]); // start with one input
 
   const userEmail = user?.email || 'guest';
 
   const [recentColors, setRecentColors] = useState([]);
   useEffect(() => {
     const stored = localStorage.getItem(`recentColors_${userEmail}`);
-    if (stored) {
-      setRecentColors(JSON.parse(stored));
-    }
+    if (stored) setRecentColors(JSON.parse(stored));
   }, [userEmail]);
 
   const updateRecentColors = (newColor) => {
     setRecentColors((prev) => {
-      const updated = [newColor, ...prev.filter(c => c !== newColor)].slice(0, 5);
+      const updated = [newColor, ...prev.filter((c) => c !== newColor)].slice(0, 5);
       localStorage.setItem(`recentColors_${userEmail}`, JSON.stringify(updated));
       return updated;
     });
@@ -34,60 +34,70 @@ function NewMemoryForm({ onAdd, user }) {
     setImages(newImages);
   };
 
-
-  const addImageInput = () => {
-    setImages([...images, null]);
-  };
+  const addImageInput = () => setImages((prev) => [...prev, null]);
 
   const getCSRFTokenFromCookie = () => {
-    const name = 'csrftoken=';
-    const cookies = decodeURIComponent(document.cookie).split(';');
-    for (let cookie of cookies) {
-      cookie = cookie.trim();
-      if (cookie.startsWith(name)) {
-        return cookie.slice(name.length);
-      }
-    }
-    return '';
+    const m = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // randomize coordinates if not set by UI
+    const x = (Math.random() * 80 + 10).toFixed(2);
+    const y = (Math.random() * 80 + 10).toFixed(2);
+
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
     formData.append('color', color);
-    formData.append('x', (Math.random() * 80 + 10).toFixed(2));
-    formData.append('y', (Math.random() * 80 + 10).toFixed(2));
-    images.filter(Boolean).forEach(img => {
-      formData.append('images', img);
-    });
+    formData.append('x', x);
+    formData.append('y', y);
+
+    // append all selected images
+    images.filter(Boolean).forEach((img) => formData.append('images', img));
+
+    // (optional) prime CSRF cookie
+    try {
+      await fetch(`${API_BASE}/csrf/`, { credentials: 'include' });
+    } catch (_) {}
 
     const csrfToken = getCSRFTokenFromCookie();
+    const token = localStorage.getItem('authToken');
 
-    const token = localStorage.getItem("authToken");
+    try {
+      const response = await fetch(`${API_BASE}/api/memories/`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          // don't set Content-Type when using FormData
+          Authorization: token ? `Token ${token}` : '',
+          'X-CSRFToken': csrfToken,
+        },
+        body: formData,
+      });
 
-    const response = await fetch('http://127.0.0.1:8000/api/memories/', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Token ${localStorage.getItem('authToken')}`,
-        'X-CSRFToken': csrfToken,
-      },
-      credentials: 'include',
-      body: formData,
-    });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || `HTTP ${response.status}`);
+      }
 
-    if (response.ok) {
-      toast.success("Memory saved");
-      updateRecentColors(color);  // <- only save the color if the memory actually saved
-      onAdd();
+      toast.success('Memory saved');
+      updateRecentColors(color);
+
+      // let parent refresh the list
+      onAdd && onAdd();
+
+      // reset form
       setTitle('');
       setContent('');
       setColor('#ffffff');
-      setImages([]);
+      setImages([]); // show the single "choose file" input again
+    } catch (err) {
+      console.error('Create memory failed:', err);
+      toast.error('Failed to save memory');
     }
-
   };
 
   return (
@@ -103,7 +113,9 @@ function NewMemoryForm({ onAdd, user }) {
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <label htmlFor="date" style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Date:</label>
+        <label htmlFor="date" style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>
+          Date:
+        </label>
         <input
           id="date"
           type="date"
@@ -115,7 +127,9 @@ function NewMemoryForm({ onAdd, user }) {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <label htmlFor="content" style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Memory:</label>
+        <label htmlFor="content" style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>
+          Memory:
+        </label>
         <textarea
           id="content"
           value={content}
@@ -127,7 +141,9 @@ function NewMemoryForm({ onAdd, user }) {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <label htmlFor="color" style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Color:</label>
+        <label htmlFor="color" style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>
+          Color:
+        </label>
         <input
           id="color"
           type="color"
@@ -138,13 +154,16 @@ function NewMemoryForm({ onAdd, user }) {
       </div>
 
       {recentColors.length > 0 && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
+        <div
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}
+        >
           <span style={{ fontSize: '0.9rem', color: theme === 'dark' ? '#8fdcff' : '#000' }}>
             Recently Used:
           </span>
           {recentColors.map((c, index) => (
             <button
               key={index}
+              type="button"
               onClick={() => setColor(c)}
               style={{
                 width: '24px',
@@ -152,7 +171,7 @@ function NewMemoryForm({ onAdd, user }) {
                 borderRadius: '50%',
                 border: '1px solid #ccc',
                 backgroundColor: c,
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
               aria-label={`Use recent color ${c}`}
             />
@@ -162,7 +181,7 @@ function NewMemoryForm({ onAdd, user }) {
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <label style={{ color: theme === 'dark' ? '#8fdcff' : '#000' }}>Images:</label>
-        {/* Initial choose file button if no files yet */}
+
         {images.length === 0 && (
           <input
             type="file"
@@ -172,28 +191,17 @@ function NewMemoryForm({ onAdd, user }) {
           />
         )}
 
-        {/* Render all added file inputs */}
         {images.map((img, index) => (
           <div
             key={index}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              marginBottom: '6px'
-            }}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}
           >
             <input
               type="file"
               accept="image/*"
               onChange={(e) => handleImageChange(index, e.target.files[0])}
-              style={{
-                padding: '6px',
-                flexGrow: 1,
-                color: theme === 'dark' ? '#8fdcff' : '#000'
-              }}
+              style={{ padding: '6px', flexGrow: 1, color: theme === 'dark' ? '#8fdcff' : '#000' }}
             />
-
             {index > 0 && (
               <button
                 type="button"
@@ -208,7 +216,7 @@ function NewMemoryForm({ onAdd, user }) {
                   color: theme === 'dark' ? '#ff8080' : '#cc0000',
                   fontWeight: 'bold',
                   cursor: 'pointer',
-                  fontSize: '16px'
+                  fontSize: '16px',
                 }}
                 aria-label="Remove image"
               >
@@ -227,7 +235,7 @@ function NewMemoryForm({ onAdd, user }) {
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
-            width: 'fit-content'
+            width: 'fit-content',
           }}
         >
           + Add file
@@ -245,3 +253,4 @@ function NewMemoryForm({ onAdd, user }) {
 }
 
 export default NewMemoryForm;
+

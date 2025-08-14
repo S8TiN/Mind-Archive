@@ -1,13 +1,7 @@
 // src/Login.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-
-// READ API BASE FROM ENV (prod & local) — no styling changes
-const API_BASE = (
-  process.env.REACT_APP_API_BASE           // local dev e.g. http://localhost:8000
-  || process.env.REACT_APP_API_BASE_URL    // Vercel prod e.g. https://mind-archive.onrender.com
-  || 'http://localhost:8000'               // fallback
-).replace(/\/+$/, ''); // strip trailing slash
+import { API_BASE } from './config';
 
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');

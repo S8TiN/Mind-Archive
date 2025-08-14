@@ -7,28 +7,34 @@ import RegionSelector from './RegionSelector';
 import Register from './Register';
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
-console.log("ResetPassword component is:", ResetPassword);
-
-console.log("Register component is:", Register);
 
 function RequireAuth({ children }) {
   const token = localStorage.getItem('authToken');
   const location = useLocation();
-
   if (!token) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-
   return children;
 }
 
-function RootApp() {
+function RedirectHome() {
+  const token = localStorage.getItem('authToken');
+  return <Navigate to={token ? '/dashboard' : '/login'} replace />;
+}
+
+export default function RootApp() {
   return (
     <Routes>
+      {/* Send "/" to dashboard if authed, else login */}
+      <Route path="/" element={<RedirectHome />} />
+
+      {/* Public routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
+
+      {/* Protected routes */}
       <Route
         path="/dashboard"
         element={
@@ -45,10 +51,11 @@ function RootApp() {
           </RequireAuth>
         }
       />
-      <Route path="*" element={<Navigate to="/login" />} />
+
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
 
-export default RootApp;
 

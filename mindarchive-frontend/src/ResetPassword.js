@@ -1,14 +1,35 @@
-import React, { useState } from 'react';
+// src/ResetPassword.js
+import React, { useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { API_BASE } from './config';
 
 export default function ResetPassword() {
   const { uid, token } = useParams();
   const navigate = useNavigate();
+
   const [password, setPassword] = useState('');
-  const [confirmed, setConfirmed] = useState(false);
-  const [error, setError] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPasswords, setShowPasswords] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
+  const [error, setError] = useState('');
+
+  // Inline CSRF helper
+  const getCSRFTokenFromCookie = () => {
+    const m = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
+  };
+
+  // Detect if the browser supports the inline masking style (Chromium/Safari do)
+  const supportsWebkitMask = useMemo(() => {
+    if (typeof document === 'undefined') return false;
+    return 'webkitTextSecurity' in document.documentElement.style;
+  }, []);
+
+  // Decide the input type & mask style per browser
+  const inputType = supportsWebkitMask ? 'text' : (showPasswords ? 'text' : 'password');
+  const maskStyle = supportsWebkitMask
+    ? { WebkitTextSecurity: showPasswords ? 'none' : 'disc' }
+    : {};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,21 +41,33 @@ export default function ResetPassword() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/api/password-reset-confirm/${uid}/${token}/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      });
+      // Prime CSRF cookie (safe if already present)
+      try { await fetch(`${API_BASE}/csrf/`, { credentials: 'include' }); } catch {}
+
+      const csrf = getCSRFTokenFromCookie();
+
+      const response = await fetch(
+        `${API_BASE}/api/password-reset-confirm/${uid}/${token}/`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrf,
+          },
+          body: JSON.stringify({ password }),
+        }
+      );
 
       if (response.ok) {
         setConfirmed(true);
       } else {
-        const data = await response.json();
-        setError(data.error || 'Reset failed.');
+        const data = await response.json().catch(() => ({}));
+        setError(data.error || data.detail || 'Reset failed.');
       }
     } catch (err) {
-      setError('Something went wrong.');
       console.error(err);
+      setError('Something went wrong.');
     }
   };
 
@@ -47,12 +80,8 @@ export default function ResetPassword() {
         playsInline
         style={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: -1
+          top: 0, left: 0, width: '100%', height: '100%',
+          objectFit: 'cover', zIndex: -1
         }}
       >
         <source src="/resetpasswordwallpaper.mp4" type="video/mp4" />
@@ -75,7 +104,9 @@ export default function ResetPassword() {
 
         {confirmed ? (
           <>
-            <p style={{ color: '#000' }}>Your password has been reset. You can now log in!</p>
+            <p style={{ color: '#000' }}>
+              Your password has been reset. You can now log in!
+            </p>
             <button
               onClick={() => navigate('/login')}
               style={{
@@ -94,10 +125,11 @@ export default function ResetPassword() {
           </>
         ) : (
           <form onSubmit={handleSubmit} style={{ maxWidth: '400px', width: '100%' }}>
-            {/* First password field with toggle icon */}
+            {/* Top field WITH the ONLY eye icon */}
             <div style={{ position: 'relative', marginBottom: '1rem' }}>
               <input
-                type={showPasswords ? 'text' : 'password'}
+                type={inputType}
+                autoComplete="new-password"
                 placeholder="Enter new password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -109,9 +141,11 @@ export default function ResetPassword() {
                   border: '1px solid #000',
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   color: '#000',
-                  outline: 'none'
+                  outline: 'none',
+                  ...maskStyle
                 }}
               />
+              {/* Your single PNG eye toggles BOTH inputs */}
               <img
                 src={showPasswords ? '/hide.png' : '/show.png'}
                 alt="Toggle password visibility"
@@ -123,15 +157,17 @@ export default function ResetPassword() {
                   transform: 'translateY(-50%)',
                   cursor: 'pointer',
                   width: '20px',
-                  height: '20px'
+                  height: '20px',
+                  userSelect: 'none'
                 }}
               />
             </div>
 
-            {/* Second password field (no icon, just follows state) */}
+            {/* Bottom field WITHOUT any icon */}
             <div style={{ position: 'relative', marginBottom: '1rem' }}>
               <input
-                type={showPasswords ? 'text' : 'password'}
+                type={inputType}
+                autoComplete="new-password"
                 placeholder="Confirm new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -143,7 +179,8 @@ export default function ResetPassword() {
                   border: '1px solid #000',
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   color: '#000',
-                  outline: 'none'
+                  outline: 'none',
+                  ...maskStyle
                 }}
               />
             </div>
