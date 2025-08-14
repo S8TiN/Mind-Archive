@@ -4,6 +4,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 
+from corsheaders.defaults import default_headers
+
 load_dotenv()
 
 # ------------------------------------
@@ -54,8 +56,8 @@ SITE_ID = 1
 # ------------------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -151,7 +153,10 @@ ADDITIONAL_ORIGIN = os.getenv("ADDITIONAL_ORIGIN")  # optional
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://mindarchive.app",
+    "https://www.mindarchive.app",
 ]
+
 if FRONTEND_ORIGIN:
     CORS_ALLOWED_ORIGINS.append(FRONTEND_ORIGIN)
 if ADDITIONAL_ORIGIN:
@@ -166,6 +171,8 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://mindarchive.app",
+    "https://www.mindarchive.app",
     "https://*.vercel.app",
     "https://*.onrender.com",
 ]
