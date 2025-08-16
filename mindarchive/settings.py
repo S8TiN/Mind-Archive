@@ -6,6 +6,8 @@ import dj_database_url
 
 from corsheaders.defaults import default_headers
 
+CORS_ALLOW_HEADERS = list(default_headers) + ["X-CSRFToken"]
+
 load_dotenv()
 
 # ------------------------------------
@@ -32,7 +34,9 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "cloudinary_storage",
     "django.contrib.staticfiles",
+    "cloudinary",
     "django.contrib.sites",
 
     "rest_framework",
@@ -125,8 +129,31 @@ STATICFILES_DIRS = [_project_static] if _project_static.exists() else []
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# ------------------------------------
+# Media: Cloudinary in prod, filesystem in dev
+# ------------------------------------
+USE_CLOUDINARY = bool(
+    os.getenv("CLOUDINARY_URL")               # single URL form
+    or os.getenv("CLOUDINARY_CLOUD_NAME")     # separate vars form
+)
+
+if USE_CLOUDINARY and not DEBUG:
+    # Use Cloudinary for uploaded files (ImageField/FileField)
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+    # Only needed if you don't provide CLOUDINARY_URL
+    CLOUDINARY_STORAGE = {
+        "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
+        "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
+        "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
+    }
+
+    # cloudinary-storage builds full https://res.cloudinary.com/... URLs for you
+    MEDIA_URL = "/media/"
+else:
+    # Local dev: keep using the filesystem
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # ------------------------------------
 # DRF
