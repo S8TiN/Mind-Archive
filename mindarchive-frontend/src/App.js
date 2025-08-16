@@ -9,12 +9,6 @@ import { ThemeContext } from './ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE } from './config';
 
-const resolveUrl = (u) => {
-  if (!u) return u;
-  if (/^https?:\/\//i.test(u) || u.startsWith('data:')) return u;
-  return `${API_BASE}${u.startsWith('/') ? '' : '/'}${u}`;
-};
-
 function App() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   useEffect(() => {
@@ -588,7 +582,7 @@ function App() {
               {selectedMemory.images.map((img, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <img
-                    src={resolveUrl(img.image)}
+                    src={img.image}
                     alt={`Image ${i + 1}`}
                     style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }}
                   />
@@ -702,7 +696,7 @@ function App() {
                 {selectedMemory.images.map((img, i) => (
                   <img
                     key={i}
-                    src={resolveUrl(img.image)}
+                    src={img.image}
                     alt={`Memory ${i + 1}`}
                     style={{
                       width: '100%',

@@ -17,8 +17,8 @@ urlpatterns = [
     path('', include('journal.urls')),
 
     path('api/', include('dj_rest_auth.urls')),
-    path('api/register/', include('dj_rest_auth.registration.urls')),
-    path('api/social/login/google/', GoogleLogin.as_view(), name='google_login'),
+    #path('api/register/', include('dj_rest_auth.registration.urls')),
+    path('api/google-login/', GoogleLogin.as_view(), name='google_login'),
 
     #Enables Google login redirection
     path('accounts/', include('allauth.urls')),
